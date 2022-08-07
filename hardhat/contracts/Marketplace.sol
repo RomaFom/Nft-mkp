@@ -52,6 +52,10 @@ contract Marketplace is ReentrancyGuard {
         );
         emit Offered(itemCount,address(_nft),_tokenId,_price,msg.sender);
     }
+
+    function listItem(uint _itemId) external nonReentrant{
+
+    }
     function buyItem(uint _itemId) external payable nonReentrant{
         require(items[_itemId].isSold == false,"Item is already sold");
         require(_itemId>0 && _itemId <= itemCount,"Item does not exist");

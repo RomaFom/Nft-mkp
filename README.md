@@ -9,6 +9,6 @@ deploy contracts
 
     npm run deploy
 
-test contracts 
+myListed contracts 
 
-    npm run test
+    npm run myListed
