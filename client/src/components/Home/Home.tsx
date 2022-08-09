@@ -31,6 +31,7 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
             totalPrice,
             itemId: item.itemId,
             price: item.price,
+            listingPrice: item.listingPrice,
             seller: item.seller,
             name: metadata.name,
             description: metadata.description,
@@ -49,9 +50,11 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
 
   const buyItem = useCallback(
     async (item: MarketplaceItem) => {
-      console.log(marketPlace);
+      // console.log(marketPlace);
       await (
-        await marketPlace.buyItem(item.itemId, { value: item.totalPrice })
+        await marketPlace.buyItem(item.itemId, {
+          value: item.totalPrice,
+        })
       ).wait();
       await loadMarketPlaceItems();
     },

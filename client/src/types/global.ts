@@ -18,6 +18,7 @@ export type MarketplaceItem = {
   tokenId: number;
   nft: any;
   price: number;
+  listingPrice?: number;
   seller: string;
   isSold: boolean;
   totalPrice?: number;

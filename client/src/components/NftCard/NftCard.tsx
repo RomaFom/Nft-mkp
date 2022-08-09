@@ -10,7 +10,8 @@ type Props = {
   footer: React.ReactNode;
 };
 const NftCard: React.FC<Props> = ({ item, footer }) => {
-  const priceInEther = fromBigToEth(item.price);
+  console.log(item);
+  const priceInEther = fromBigToEth(item.listingPrice);
   return (
     <>
       <div className="card">

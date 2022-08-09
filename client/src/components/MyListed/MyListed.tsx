@@ -39,6 +39,7 @@ const MyListed: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
             name: metadata.name,
             isSold: item.isSold,
             price: item.price,
+            listingPrice: item.listingPrice,
             nft: item.nft,
             tokenId: item.tokenId,
             description: metadata.description,

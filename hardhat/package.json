@@ -11,7 +11,7 @@
     "web3": "^1.7.4"
   },
     "scripts": {
-        "start": "npx hardhat node",
+        "start": "npx hardhat node --network hardhat",
         "test": "npx hardhat test",
         "deploy": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network localhost",
         "deploy-test": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network rinkeby"
