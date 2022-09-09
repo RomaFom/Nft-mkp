@@ -1,6 +1,7 @@
 // SPDX-Licence-Identifier: MIT
 pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract NFT is ERC721URIStorage{
     uint public tokenCount;
@@ -11,5 +12,9 @@ contract NFT is ERC721URIStorage{
         _safeMint(msg.sender,tokenCount);
         _setTokenURI(tokenCount,_tokenURI);
         return tokenCount;
+    }
+
+    function getOwner(uint _tokenId) external view returns(address){
+        return ownerOf(_tokenId);
     }
 }

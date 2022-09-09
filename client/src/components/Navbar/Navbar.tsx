@@ -14,6 +14,7 @@ import {
 import { FiMenu } from "react-icons/fi";
 import { RoutePaths } from "@/types";
 import { Link } from "react-router-dom";
+import {checkAddressEquality} from "../../../utils/helpers";
 
 type NavbarProps = {
   account: string | null;
@@ -47,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ web3Handler, account, owner }) => {
     },
   ];
 
-  if (account?.toLowerCase() === owner.toLowerCase()) {
+  if (checkAddressEquality(owner,account ? account : "")) {
     RouteItems.splice(1, 0, {
       name: "Create",
       path: RoutePaths.CREATE,

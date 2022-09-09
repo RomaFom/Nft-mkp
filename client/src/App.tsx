@@ -11,6 +11,7 @@ import Home from "@/components/Home";
 import Create from "@/components/Create";
 import MyListed from "@/components/MyListed";
 import MyPurchase from "@/components/MyPurchase";
+import {checkAddressEquality} from "../utils/helpers";
 function App() {
   const [account, setAccount] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -57,7 +58,7 @@ function App() {
       if (!marketplace) return;
       setMarketPlace(marketplace);
       marketplace.itemCount().then((e: any) => {
-        console.log(e);
+        // console.log(e);
       });
       const owner = await marketplace.feeAccount();
       setOwner(owner);
@@ -74,9 +75,9 @@ function App() {
   const checkConnection = async () => {
     // @ts-ignore
     const account = await window.ethereum.request({ method: "eth_accounts" });
-    console.log(account);
+    // console.log(account);
     if (account[0]) {
-      console.log("Account found");
+      // console.log("Account found");
       await web3Handler();
       return;
     }
@@ -135,7 +136,7 @@ function App() {
                   />
                 }
               />
-              {owner.toLowerCase() === account.toLowerCase() && (
+              {checkAddressEquality(owner,account) && (
                 <Route
                   path={RoutePaths.CREATE}
                   element={

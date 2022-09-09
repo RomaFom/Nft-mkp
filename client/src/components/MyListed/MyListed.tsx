@@ -6,7 +6,7 @@ import { PageBasicProps } from "@/types";
 import GridLoader from "@/components/Loaders/GridLoader";
 import PageWrapper from "@/components/Layout/PageWrapper";
 import NftCard from "@/components/NftCard";
-import { fromBigToEth } from "../../../utils/helpers";
+import {checkAddressEquality, fromBigToEth} from "../../../utils/helpers";
 
 const MyListed: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const MyListed: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
       for (let i = 1; i <= itemsCount; i++) {
         const item: MarketplaceItem = await marketPlace.items(i);
 
-        if (item.seller.toLowerCase() === wallet.toLowerCase()) {
+        if (checkAddressEquality(wallet,item.seller) && !item.isSold) {
           //  get nft url
           const url = await nft.tokenURI(item.tokenId);
           //  get nft metadata

@@ -1,12 +1,28 @@
 import React from "react";
 import { create as ipsfHttpClient } from "ipfs-http-client";
 import { ethers } from "ethers";
-const client = ipsfHttpClient({ url: "https://ipfs.infura.io:5001/api/v0" });
+import { Buffer } from "buffer";
+
+const projectId = import.meta.env.VITE_APP_PROJECT_ID
+const projectSecret = import.meta.env.VITE_APP_PROJECT_SECRET
+const auth =
+    'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+const client = ipsfHttpClient({
+    host: "ipfs.infura.io",
+    port: 5001,
+    protocol: "https",
+    headers: {
+        authorization: auth,
+    }
+});
+
 import { Box, Stack, Input, Button } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { PageBasicProps } from "@/types";
 
 const Create: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
+
   const [image, setImage] = React.useState<string>("");
   const [name, setName] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
@@ -22,7 +38,7 @@ const Create: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
       setImgUploading(true);
       const result = await client.add(file);
       console.log(result);
-      setImage("https://ipfs.infura.io/ipfs/" + result.path);
+      setImage("https://roma-mkp.infura-ipfs.io/ipfs/" + result.path);
     } catch (e) {
       console.log(e);
     } finally {
@@ -41,6 +57,7 @@ const Create: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
       console.log(result);
       await mintThenList(result);
     } catch (e) {
+        console.log(e);
     } finally {
       setLoading(false);
       navigate("/");
@@ -48,12 +65,14 @@ const Create: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
   };
 
   const mintThenList = async (result: any) => {
-    const uri = "https://ipfs.infura.io/ipfs/" + result.path;
+    const uri = "https://roma-mkp.infura-ipfs.io/ipfs/" + result.path;
     await (await nft.mint(uri)).wait();
     const id = await nft.tokenCount();
+    console.log("ID", id);
     await (await nft.setApprovalForAll(marketPlace.address, true)).wait();
     const listingPrice = ethers.utils.parseEther(price.toString());
-    await (await marketPlace.makeItem(nft.address, id, listingPrice)).wait();
+    const res = await (await marketPlace.makeItem(nft.address, id, listingPrice)).wait();
+    console.log(res);
   };
 
   return (

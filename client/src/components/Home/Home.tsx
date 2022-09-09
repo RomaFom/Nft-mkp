@@ -7,6 +7,7 @@ import { PageBasicProps } from "@/types";
 import GridLoader from "@/components/Loaders/GridLoader";
 import { SimpleGrid, Box, Button } from "@chakra-ui/react";
 import PageWrapper from "@/components/Layout/PageWrapper";
+import {checkAddressEquality} from "../../../utils/helpers";
 
 type Props = PageBasicProps & {
   web3Handler: () => void;
@@ -14,6 +15,7 @@ type Props = PageBasicProps & {
 const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
   const [items, setItems] = React.useState<Array<MarketplaceItem>>([]);
   const [loading, setLoading] = React.useState(false);
+
   const loadMarketPlaceItems = async () => {
     try {
       setLoading(true);
@@ -22,6 +24,7 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
 
       for (let i = 1; i <= itemCount; i++) {
         const item: MarketplaceItem = await marketPlace.items(i);
+
         if (!item.isSold) {
           const url = await nft.tokenURI(item.tokenId);
           const response = await fetch(url);
@@ -39,7 +42,7 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
           } as MarketplaceItem);
         }
       }
-      console.log(items);
+      // console.log(items);
       setItems(items);
     } catch (e) {
       console.log(e);
@@ -51,11 +54,12 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
   const buyItem = useCallback(
     async (item: MarketplaceItem) => {
       // console.log(marketPlace);
-      await (
+      let res=await (
         await marketPlace.buyItem(item.itemId, {
           value: item.totalPrice,
         })
       ).wait();
+      console.log(res)
       await loadMarketPlaceItems();
     },
     [marketPlace, nft, wallet]
@@ -82,31 +86,32 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
               item={item}
               footer={
                 <>
-                  {wallet.toLowerCase() !== item.seller.toLowerCase() ? (
+                  {checkAddressEquality(wallet,item.seller) ? (
                     <>
-                      <Button
-                        size="lg"
-                        w="100%"
-                        colorScheme="teal"
-                        variant="outline"
-                        onClick={async () => {
-                          console.log(item);
-                          if (!wallet) {
-                            web3Handler();
-                            return;
-                          } else {
-                            await buyItem(item);
-                          }
-                        }}
-                      >
-                        {wallet ? "Buy" : "Login to buy"}
-                      </Button>
+                      <>My Listing</>
 
                       {/*<img src="#" className="card__author-img" />*/}
                       {/*<p className="card__author-name">Creation of ...</p>*/}
                     </>
                   ) : (
-                    <>My Listing</>
+                      <Button
+                          size="lg"
+                          w="100%"
+                          colorScheme="teal"
+                          variant="outline"
+                          onClick={async () => {
+                            console.log(item);
+                            if (!wallet) {
+                              web3Handler();
+                              return;
+                            } else {
+                              await buyItem(item);
+                            }
+                          }}
+                      >
+                        {wallet ? "Buy" : "Login to buy"}
+                      </Button>
+
                   )}
                 </>
               }
