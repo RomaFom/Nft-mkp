@@ -2,6 +2,10 @@ import React from "react";
 import { create as ipsfHttpClient } from "ipfs-http-client";
 import { ethers } from "ethers";
 import { Buffer } from "buffer";
+import { Box, Stack, Input, Button } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { PageBasicProps } from "@/types";
+import {Transaction} from "../../../utils/api";
 
 const projectId = import.meta.env.VITE_APP_PROJECT_ID
 const projectSecret = import.meta.env.VITE_APP_PROJECT_SECRET
@@ -13,16 +17,13 @@ const client = ipsfHttpClient({
     port: 5001,
     protocol: "https",
     headers: {
-        authorization: auth,
+      authorization: auth,
     }
 });
 
-import { Box, Stack, Input, Button } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
-import { PageBasicProps } from "@/types";
+
 
 const Create: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
-
   const [image, setImage] = React.useState<string>("");
   const [name, setName] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
@@ -72,7 +73,12 @@ const Create: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
     await (await nft.setApprovalForAll(marketPlace.address, true)).wait();
     const listingPrice = ethers.utils.parseEther(price.toString());
     const res = await (await marketPlace.makeItem(nft.address, id, listingPrice)).wait();
-    console.log(res);
+
+    const dbId = await Transaction.addNew({
+        wallet:wallet,
+        tx_hash: res.transactionHash
+    })
+
   };
 
   return (

@@ -1,13 +1,14 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { ethers } from "ethers";
 import { MarketplaceItem } from "@/types";
 import NftCard from "@/components/NftCard";
 import { PageBasicProps } from "@/types";
 
 import GridLoader from "@/components/Loaders/GridLoader";
-import { SimpleGrid, Box, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import PageWrapper from "@/components/Layout/PageWrapper";
 import {checkAddressEquality} from "../../../utils/helpers";
+import {Transaction} from "../../../utils/api";
 
 type Props = PageBasicProps & {
   web3Handler: () => void;
@@ -26,8 +27,8 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
         const item: MarketplaceItem = await marketPlace.items(i);
 
         if (!item.isSold) {
-          const url = await nft.tokenURI(item.tokenId);
-          const response = await fetch(url);
+          const ipfsUrlData = await nft.tokenURI(item.tokenId);
+          const response = await fetch(ipfsUrlData);
           const metadata = await response.json();
           const totalPrice = await marketPlace.getFinalPrice(item.itemId);
           items.push({
@@ -42,7 +43,6 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
           } as MarketplaceItem);
         }
       }
-      // console.log(items);
       setItems(items);
     } catch (e) {
       console.log(e);
@@ -60,18 +60,34 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
         })
       ).wait();
       console.log(res)
+      const dbId = await Transaction.addNew({
+        wallet:wallet,
+        tx_hash: res.transactionHash
+      })
+
+      console.log(dbId)
       await loadMarketPlaceItems();
     },
     [marketPlace, nft, wallet]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (marketPlace && nft) {
       loadMarketPlaceItems()
         .then(() => {})
         .catch((error: any) => {
           console.log(error);
         });
+
+      // const provider = new ethers.providers.Web3Provider(window.ethereum);
+      //  provider.getBalance(wallet).then((balance: any) => {
+      //   console.log(ethers.utils.formatEther(balance));
+      //  return balance;
+      // });
+      //
+      // const rpcProvider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+      // console.log(rpcProvider);
+
     }
   }, [marketPlace, nft, wallet]);
   return (
