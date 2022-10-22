@@ -8,15 +8,16 @@ import { fromBigToEth } from "../../../utils/helpers";
 type Props = {
   item: MarketplaceItem;
   footer: React.ReactNode;
+  onClick?: () => void;
 };
-const NftCard: React.FC<Props> = ({ item, footer }) => {
+const NftCard: React.FC<Props> = ({ item, footer, onClick }) => {
   // console.log(item);
   const priceInEther = fromBigToEth(item.listingPrice);
   return (
     <>
       <div className="card">
         <div className="card__head">
-          <div className="card__product-img">
+          <div onClick={onClick} className="card__product-img">
             <img src={item.image} />
           </div>
         </div>

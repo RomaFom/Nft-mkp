@@ -5,6 +5,7 @@ export enum RoutePaths {
   CREATE = "/create",
   MY_LISTINGS = "/my-listings",
   MY_PURCHASES = "/my-purchases",
+  NFT_DETAILS = "/nft/:id",
 }
 
 export type PageBasicProps = {

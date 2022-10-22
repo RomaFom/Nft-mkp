@@ -7,8 +7,8 @@ import { PageBasicProps } from "@/types";
 import GridLoader from "@/components/Loaders/GridLoader";
 import { Button } from "@chakra-ui/react";
 import PageWrapper from "@/components/Layout/PageWrapper";
-import {checkAddressEquality} from "../../../utils/helpers";
-import {Transaction} from "../../../utils/api";
+import { checkAddressEquality } from "../../../utils/helpers";
+import { Transaction } from "../../../utils/api";
 
 type Props = PageBasicProps & {
   web3Handler: () => void;
@@ -54,18 +54,17 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
   const buyItem = useCallback(
     async (item: MarketplaceItem) => {
       // console.log(marketPlace);
-      let res=await (
+      let res = await (
         await marketPlace.buyItem(item.itemId, {
           value: item.totalPrice,
         })
       ).wait();
-      console.log(res)
-      const dbId = await Transaction.addNew({
-        wallet:wallet,
-        tx_hash: res.transactionHash
-      })
 
-      console.log(dbId)
+      const dbId = await Transaction.addNew({
+        wallet: wallet,
+        tx_hash: res.transactionHash,
+      });
+
       await loadMarketPlaceItems();
     },
     [marketPlace, nft, wallet]
@@ -87,7 +86,6 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
       //
       // const rpcProvider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
       // console.log(rpcProvider);
-
     }
   }, [marketPlace, nft, wallet]);
   return (
@@ -102,32 +100,28 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
               item={item}
               footer={
                 <>
-                  {checkAddressEquality(wallet,item.seller) ? (
+                  {checkAddressEquality(wallet, item.seller) ? (
                     <>
                       <>My Listing</>
-
-                      {/*<img src="#" className="card__author-img" />*/}
-                      {/*<p className="card__author-name">Creation of ...</p>*/}
                     </>
                   ) : (
-                      <Button
-                          size="lg"
-                          w="100%"
-                          colorScheme="teal"
-                          variant="outline"
-                          onClick={async () => {
-                            console.log(item);
-                            if (!wallet) {
-                              web3Handler();
-                              return;
-                            } else {
-                              await buyItem(item);
-                            }
-                          }}
-                      >
-                        {wallet ? "Buy" : "Login to buy"}
-                      </Button>
-
+                    <Button
+                      size="lg"
+                      w="100%"
+                      colorScheme="teal"
+                      variant="outline"
+                      onClick={async () => {
+                        console.log(item);
+                        if (!wallet) {
+                          web3Handler();
+                          return;
+                        } else {
+                          await buyItem(item);
+                        }
+                      }}
+                    >
+                      {wallet ? "Buy" : "Login to buy"}
+                    </Button>
                   )}
                 </>
               }

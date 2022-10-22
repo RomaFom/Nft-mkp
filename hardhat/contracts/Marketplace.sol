@@ -69,7 +69,7 @@ contract Marketplace is ReentrancyGuard {
         item.nft.transferFrom(msg.sender,address(this),item.tokenId);
         item.seller = payable(msg.sender);
         item.isSold = false;
-
+        emit Offered(_itemId,address(item.nft),item.tokenId,_price,msg.sender);
     }
 
     function buyItem(uint _itemId) external payable nonReentrant{

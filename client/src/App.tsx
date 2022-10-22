@@ -7,11 +7,12 @@ import NFTAddress from "../contracts/NFT-address.json";
 import { Layout } from "@/components/Layout";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { RoutePaths } from "@/types";
-import Home from "@/components/Home";
-import Create from "@/components/Create";
-import MyListed from "@/components/MyListed";
-import MyPurchase from "@/components/MyPurchase";
-import {checkAddressEquality} from "../utils/helpers";
+import Home from "@/pages/Home";
+import Create from "@/pages/Create";
+import MyListed from "@/pages/MyListed";
+import MyPurchase from "@/pages/MyPurchase";
+import NftDetails from "@/pages/Nft";
+import { checkAddressEquality } from "../utils/helpers";
 function App() {
   const [account, setAccount] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -136,7 +137,7 @@ function App() {
                   />
                 }
               />
-              {checkAddressEquality(owner,account) && (
+              {checkAddressEquality(owner, account) && (
                 <Route
                   path={RoutePaths.CREATE}
                   element={
@@ -179,6 +180,16 @@ function App() {
                 nft={nft!}
                 wallet={account}
                 web3Handler={web3Handler}
+              />
+            }
+          />
+          <Route
+            path={RoutePaths.NFT_DETAILS}
+            element={
+              <NftDetails
+                marketPlace={marketPlace!}
+                nft={nft!}
+                wallet={account}
               />
             }
           />
