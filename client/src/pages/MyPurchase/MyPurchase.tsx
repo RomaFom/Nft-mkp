@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { MarketplaceItem, PageBasicProps } from "@/types";
+import { MarketplaceItem } from "@/types";
 import GridLoader from "@/components/Loaders/GridLoader";
 import PageWrapper from "@/components/Layout/PageWrapper";
 import NftCard from "@/components/NftCard";
@@ -8,19 +8,21 @@ import { Button } from "@chakra-ui/react";
 import { BigNumber, ethers } from "ethers";
 import { Transaction } from "../../../utils/api";
 import { useNavigate } from "react-router-dom";
-const MyPurchase: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
+import { useDapp } from "@/DappContext";
+const MyPurchase: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [purchased, setPurchased] = useState<MarketplaceItem[]>(
     [] as MarketplaceItem[]
   );
   const navigate = useNavigate();
+  const { marketplaceContract, nftContract, wallet } = useDapp();
 
   const TEMP_ADD_ETH = 10;
   const loadPurchasedItems = async () => {
     try {
       setLoading(true);
 
-      const filter = marketPlace.filters.Bought(
+      const filter = marketplaceContract?.filters.Bought(
         null,
         null,
         null,
@@ -28,23 +30,25 @@ const MyPurchase: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
         null,
         wallet
       );
-      const results = await marketPlace.queryFilter(filter);
+      const results = await marketplaceContract?.queryFilter(filter || {});
       // console.log(await results[0].getBlock());
       const purchases = [] as MarketplaceItem[];
       await Promise.all(
-        results.map(async (item) => {
+        results!.map(async (item) => {
           const mkpItem: MarketplaceItem = item?.args as any;
-          const mkp = await marketPlace.items(mkpItem.itemId);
-          const owner = await nft.ownerOf(mkp.tokenId);
+          const mkp = await marketplaceContract?.items(mkpItem.itemId);
+          const owner = await nftContract?.ownerOf(mkp.tokenId);
 
           if (!checkAddressEquality(owner, wallet)) {
             return;
           }
 
-          const url = await nft.tokenURI(mkpItem.tokenId);
+          const url = await nftContract?.tokenURI(mkpItem.tokenId);
           const response = await fetch(url);
           const metadata = await response.json();
-          const totalPrice = await marketPlace.getFinalPrice(mkpItem.itemId);
+          const totalPrice = await marketplaceContract?.getFinalPrice(
+            mkpItem.itemId
+          );
           purchases.push({
             totalPrice,
             itemId: mkpItem.itemId,
@@ -75,19 +79,21 @@ const MyPurchase: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
 
   const listItem = useCallback(
     async (itemId: any, listingPrice: any) => {
-      await (await nft.setApprovalForAll(marketPlace.address, true)).wait();
+      await (
+        await nftContract?.setApprovalForAll(marketplaceContract?.address, true)
+      ).wait();
       const res = await (
-        await marketPlace.listItem(itemId, listingPrice)
+        await marketplaceContract?.listItem(itemId, listingPrice)
       ).wait();
 
-      const dbId = await Transaction.addNew({
+      await Transaction.addNew({
         wallet: wallet,
         tx_hash: res.transactionHash,
       });
 
       await loadPurchasedItems();
     },
-    [nft, marketPlace]
+    [nftContract, marketplaceContract]
   );
 
   const handleClick = async (id: BigNumber) => {
@@ -142,7 +148,7 @@ const MyPurchase: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
                 )}
               </>
             }
-            key={item!.tokenId}
+            key={item!.tokenId.toNumber()}
           />
         );
       })}

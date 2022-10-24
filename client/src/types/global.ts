@@ -1,13 +1,5 @@
 import { ethers } from "ethers";
 
-export enum RoutePaths {
-  HOME = "/",
-  CREATE = "/create",
-  MY_LISTINGS = "/my-listings",
-  MY_PURCHASES = "/my-purchases",
-  NFT_DETAILS = "/nft/:id",
-}
-
 export type PageBasicProps = {
   marketPlace: ethers.Contract;
   nft: ethers.Contract;
@@ -15,14 +7,14 @@ export type PageBasicProps = {
 };
 
 export type MarketplaceItem = {
-  itemId: number;
-  tokenId: number;
-  nft: any;
-  price: number;
-  listingPrice?: number;
+  itemId: ethers.BigNumber;
+  tokenId: ethers.BigNumber;
+  nft: string;
+  price: ethers.BigNumber;
+  listingPrice?: ethers.BigNumber;
   seller: string;
   isSold: boolean;
-  totalPrice?: number;
+  totalPrice?: ethers.BigNumber;
   name: string;
   description: string;
   image: string;

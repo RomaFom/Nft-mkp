@@ -1,38 +1,35 @@
 import React, { useCallback, useEffect } from "react";
-import { ethers } from "ethers";
 import { MarketplaceItem } from "@/types";
 import NftCard from "@/components/NftCard";
-import { PageBasicProps } from "@/types";
-
 import GridLoader from "@/components/Loaders/GridLoader";
 import { Button } from "@chakra-ui/react";
 import PageWrapper from "@/components/Layout/PageWrapper";
 import { checkAddressEquality } from "../../../utils/helpers";
 import { Transaction } from "../../../utils/api";
+import { useDapp } from "@/DappContext";
 
-type Props = PageBasicProps & {
-  web3Handler: () => void;
-};
-const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
+const Home: React.FC = () => {
   const [items, setItems] = React.useState<Array<MarketplaceItem>>([]);
   const [loading, setLoading] = React.useState(false);
+  const { nftContract, wallet, web3Handler, Mkp } = useDapp();
 
   const loadMarketPlaceItems = async () => {
     try {
       setLoading(true);
-      const itemCount = await marketPlace.itemCount();
+      const itemCount = await Mkp.getItemsCount();
       const items: MarketplaceItem[] = [];
 
       for (let i = 1; i <= itemCount; i++) {
-        const item: MarketplaceItem = await marketPlace.items(i);
+        const item: MarketplaceItem = await Mkp.items(i);
 
         if (!item.isSold) {
-          const ipfsUrlData = await nft.tokenURI(item.tokenId);
+          const ipfsUrlData = await nftContract?.tokenURI(item.tokenId);
           const response = await fetch(ipfsUrlData);
           const metadata = await response.json();
-          const totalPrice = await marketPlace.getFinalPrice(item.itemId);
+          const totalPrice = await Mkp.getFinalPrice(item.itemId);
+
           items.push({
-            totalPrice,
+            totalPrice: totalPrice,
             itemId: item.itemId,
             price: item.price,
             listingPrice: item.listingPrice,
@@ -53,25 +50,18 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
 
   const buyItem = useCallback(
     async (item: MarketplaceItem) => {
-      // console.log(marketPlace);
-      let res = await (
-        await marketPlace.buyItem(item.itemId, {
-          value: item.totalPrice,
-        })
-      ).wait();
-
-      const dbId = await Transaction.addNew({
+      const res = await Mkp.buyItem(item.itemId, item.totalPrice!);
+      await Transaction.addNew({
         wallet: wallet,
         tx_hash: res.transactionHash,
       });
-
       await loadMarketPlaceItems();
     },
-    [marketPlace, nft, wallet]
+    [Mkp, nftContract, wallet]
   );
 
   useEffect(() => {
-    if (marketPlace && nft) {
+    if (Mkp && nftContract) {
       loadMarketPlaceItems()
         .then(() => {})
         .catch((error: any) => {
@@ -87,7 +77,7 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
       // const rpcProvider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
       // console.log(rpcProvider);
     }
-  }, [marketPlace, nft, wallet]);
+  }, [nftContract, wallet]);
   return (
     <>
       {loading ? (
@@ -113,7 +103,7 @@ const Home: React.FC<Props> = ({ marketPlace, nft, wallet, web3Handler }) => {
                       onClick={async () => {
                         console.log(item);
                         if (!wallet) {
-                          web3Handler();
+                          await web3Handler();
                           return;
                         } else {
                           await buyItem(item);

@@ -10,11 +10,12 @@
     "chai": "^4.3.6",
     "web3": "^1.7.4"
   },
-    "scripts": {
-        "start": "npx hardhat node --network hardhat",
-        "test": "npx hardhat test",
-        "deploy": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network localhost",
-        "deploy-rinkeby": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network rinkeby",
-        "deploy-goerli": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network goerli"
-    }
+  "scripts": {
+    "start": "npx hardhat node --network hardhat",
+    "test": "npx hardhat test",
+    "deploy-no-compile": "npx hardhat run scripts/deploy.ts --network localhost",
+    "deploy": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network localhost",
+    "deploy-rinkeby": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network rinkeby",
+    "deploy-goerli": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network goerli"
+  }
 }

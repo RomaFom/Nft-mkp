@@ -12,21 +12,17 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
-import { RoutePaths } from "@/types";
 import { Link } from "react-router-dom";
-import {checkAddressEquality} from "../../../utils/helpers";
-
-type NavbarProps = {
-  account: string | null;
-  owner: string;
-  web3Handler: () => void;
-};
+import { checkAddressEquality } from "../../../utils/helpers";
+import { useDapp } from "@/DappContext";
+import { RoutePaths } from "@/routes";
 
 type NavLinks = {
   path: RoutePaths;
   name: string;
 };
-const Navbar: React.FC<NavbarProps> = ({ web3Handler, account, owner }) => {
+const Navbar: React.FC = () => {
+  const { wallet, owner, web3Handler } = useDapp();
   const isDesktop = useBreakpointValue({ base: false, lg: true });
 
   const RouteItems: NavLinks[] = [
@@ -48,12 +44,13 @@ const Navbar: React.FC<NavbarProps> = ({ web3Handler, account, owner }) => {
     },
   ];
 
-  if (checkAddressEquality(owner,account ? account : "")) {
+  if (checkAddressEquality(owner, wallet ? wallet : "")) {
     RouteItems.splice(1, 0, {
       name: "Create",
       path: RoutePaths.CREATE,
     });
   }
+
   return (
     <Box as="section" pb={{ base: "12", md: "24" }}>
       <Box
@@ -67,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = ({ web3Handler, account, owner }) => {
             {isDesktop ? (
               <Flex justify="space-between" flex="1">
                 <ButtonGroup variant="link" spacing="8">
-                  {account ? (
+                  {wallet ? (
                     RouteItems.map((item) => {
                       return (
                         <Button key={item.name}>
@@ -83,9 +80,9 @@ const Navbar: React.FC<NavbarProps> = ({ web3Handler, account, owner }) => {
                 </ButtonGroup>
                 <HStack spacing="3">
                   {/*<Button variant="ghost">Go To Meta!</Button>*/}
-                  {account ? (
+                  {wallet ? (
                     <Text maxWidth={20} noOfLines={1}>
-                      {account}
+                      {wallet}
                     </Text>
                   ) : (
                     <Button

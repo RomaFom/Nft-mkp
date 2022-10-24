@@ -1,36 +1,37 @@
 import React, { useEffect, useState } from "react";
-
 import { MarketplaceItem } from "@/types";
-import { ethers } from "ethers";
-import { PageBasicProps } from "@/types";
 import GridLoader from "@/components/Loaders/GridLoader";
 import PageWrapper from "@/components/Layout/PageWrapper";
 import NftCard from "@/components/NftCard";
-import {checkAddressEquality, fromBigToEth} from "../../../utils/helpers";
+import { checkAddressEquality, fromBigToEth } from "../../../utils/helpers";
+import { useDapp } from "@/DappContext";
 
-const MyListed: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
+const MyListed: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [listed, setListed] = useState<Array<MarketplaceItem>>([]);
-  const [sold, setSold] = useState<Array<MarketplaceItem>>([]);
+  // const [sold, setSold] = useState<Array<MarketplaceItem>>([]);
+  const { marketplaceContract, nftContract, wallet } = useDapp();
 
   const loadListedItems = async () => {
     try {
       setLoading(true);
-      const itemsCount = await marketPlace.itemCount();
+      const itemsCount = await marketplaceContract?.itemCount();
       const listed: MarketplaceItem[] = [];
-      const sold: MarketplaceItem[] = [];
+      // const sold: MarketplaceItem[] = [];
 
       for (let i = 1; i <= itemsCount; i++) {
-        const item: MarketplaceItem = await marketPlace.items(i);
+        const item: MarketplaceItem = await marketplaceContract?.items(i);
 
-        if (checkAddressEquality(wallet,item.seller) && !item.isSold) {
+        if (checkAddressEquality(wallet, item.seller) && !item.isSold) {
           //  get nft url
-          const url = await nft.tokenURI(item.tokenId);
+          const url = await nftContract?.tokenURI(item.tokenId);
           //  get nft metadata
           const response = await fetch(url);
           const metadata = await response.json();
           //  get final price
-          const totalPrice = await marketPlace.getFinalPrice(item.itemId);
+          const totalPrice = await marketplaceContract?.getFinalPrice(
+            item.itemId
+          );
 
           let itemData: MarketplaceItem = {
             totalPrice,

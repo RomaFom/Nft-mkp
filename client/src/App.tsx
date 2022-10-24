@@ -1,24 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { ethers } from "ethers";
 import MarketplaceAbi from "../contracts/Marketplace.json";
 import MarketplaceAddress from "../contracts/Marketplace-address.json";
 import NFTAbi from "../contracts/NFT.json";
 import NFTAddress from "../contracts/NFT-address.json";
-import { Layout } from "@/components/Layout";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { RoutePaths } from "@/types";
-import Home from "@/pages/Home";
-import Create from "@/pages/Create";
-import MyListed from "@/pages/MyListed";
-import MyPurchase from "@/pages/MyPurchase";
-import NftDetails from "@/pages/Nft";
-import { checkAddressEquality } from "../utils/helpers";
+import { useRoutes } from "react-router-dom";
+import { routes } from "./routes";
+import { DappContext, IDappCtx } from "@/DappContext";
+import Navbar from "@/components/Navbar";
+import { Marketplace } from "@/contract-integration/marketplace";
 function App() {
   const [account, setAccount] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [owner, setOwner] = useState("");
-  const [nft, setNft] = useState<ethers.Contract>();
-  const [marketPlace, setMarketPlace] = useState<ethers.Contract>();
+  const [nft, setNft] = useState<ethers.Contract | null>(null);
+  const [marketPlace, setMarketPlace] = useState<ethers.Contract | null>(null);
 
   const web3Handler = async () => {
     // @ts-ignore
@@ -58,9 +54,6 @@ function App() {
       );
       if (!marketplace) return;
       setMarketPlace(marketplace);
-      marketplace.itemCount().then((e: any) => {
-        // console.log(e);
-      });
       const owner = await marketplace.feeAccount();
       setOwner(owner);
       const nft = new ethers.Contract(NFTAddress.address, NFTAbi.abi, signer);
@@ -120,83 +113,29 @@ function App() {
     // web3Handler();
   }, [account]);
 
+  const dappCtxValues: IDappCtx = {
+    nftContract: nft,
+    marketplaceContract: marketPlace,
+    wallet: account,
+    owner: owner,
+    web3Handler: web3Handler,
+    Mkp: new Marketplace(marketPlace as ethers.Contract),
+  };
+
+  const renderRoutes = useRoutes(routes);
+
   return (
     <div className="App">
-      <Layout web3Handler={web3Handler} account={account} owner={owner}>
-        <Routes>
-          {nft && marketPlace && account && (
-            <>
-              <Route
-                path={RoutePaths.HOME}
-                element={
-                  <Home
-                    marketPlace={marketPlace!}
-                    nft={nft!}
-                    wallet={account}
-                    web3Handler={web3Handler}
-                  />
-                }
-              />
-              {checkAddressEquality(owner, account) && (
-                <Route
-                  path={RoutePaths.CREATE}
-                  element={
-                    <Create
-                      marketPlace={marketPlace!}
-                      nft={nft!}
-                      wallet={account}
-                    />
-                  }
-                />
-              )}
-
-              <Route
-                path={RoutePaths.MY_LISTINGS}
-                element={
-                  <MyListed
-                    marketPlace={marketPlace}
-                    nft={nft}
-                    wallet={account}
-                  />
-                }
-              />
-              <Route
-                path={RoutePaths.MY_PURCHASES}
-                element={
-                  <MyPurchase
-                    marketPlace={marketPlace}
-                    nft={nft}
-                    wallet={account}
-                  />
-                }
-              />
-            </>
-          )}
-          <Route
-            path={RoutePaths.HOME}
-            element={
-              <Home
-                marketPlace={marketPlace!}
-                nft={nft!}
-                wallet={account}
-                web3Handler={web3Handler}
-              />
-            }
-          />
-          <Route
-            path={RoutePaths.NFT_DETAILS}
-            element={
-              <NftDetails
-                marketPlace={marketPlace!}
-                nft={nft!}
-                wallet={account}
-              />
-            }
-          />
-          {/*<Route path={"/"} element={<h1>Connect To Meta and go Inside!</h1>} />*/}
-          <Route path={"*"} element={<h1>404</h1>} />
-        </Routes>
-      </Layout>
+      <DappContext.Provider value={dappCtxValues}>
+        <Navbar />
+        <main>
+          <Suspense
+            fallback={<div className="centered-loader">Loading...</div>}
+          >
+            {renderRoutes}
+          </Suspense>
+        </main>
+      </DappContext.Provider>
     </div>
   );
 }
