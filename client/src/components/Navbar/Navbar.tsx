@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Button,
@@ -6,106 +5,85 @@ import {
   Container,
   Flex,
   HStack,
-  IconButton,
   Text,
-  useBreakpointValue,
   useColorModeValue,
-} from "@chakra-ui/react";
-import { FiMenu } from "react-icons/fi";
-import { Link } from "react-router-dom";
-import { checkAddressEquality } from "../../../utils/helpers";
-import { useDapp } from "@/DappContext";
-import { RoutePaths } from "@/routes";
+} from '@chakra-ui/react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-type NavLinks = {
-  path: RoutePaths;
-  name: string;
-};
+import { useDapp } from '@/DappContext';
+import { RoutePaths } from '@/routes';
+
+import { checkAddressEquality, cropAddress } from '../../../utils/helpers';
+
 const Navbar: React.FC = () => {
   const { wallet, owner, web3Handler } = useDapp();
-  const isDesktop = useBreakpointValue({ base: false, lg: true });
-
-  const RouteItems: NavLinks[] = [
-    {
-      name: "Home",
-      path: RoutePaths.HOME,
-    },
-    // {
-    //   name: "Create",
-    //   path: RoutePaths.CREATE,
-    // },
-    {
-      name: "My Listings",
-      path: RoutePaths.MY_LISTINGS,
-    },
-    {
-      name: "My Purchases",
-      path: RoutePaths.MY_PURCHASES,
-    },
-  ];
-
-  if (checkAddressEquality(owner, wallet ? wallet : "")) {
-    RouteItems.splice(1, 0, {
-      name: "Create",
-      path: RoutePaths.CREATE,
-    });
-  }
+  // const isDesktop = useBreakpointValue({ base: false, lg: true });
+  const user = false;
 
   return (
-    <Box as="section" pb={{ base: "12", md: "24" }}>
-      <Box
-        as="nav"
-        bg="bg-surface"
-        boxShadow={useColorModeValue("sm", "sm-dark")}
-      >
-        <Container py={{ base: "4", lg: "5" }}>
-          <HStack spacing="10" justify="space-between">
-            {/*<Logo />*/}
-            {isDesktop ? (
-              <Flex justify="space-between" flex="1">
-                <ButtonGroup variant="link" spacing="8">
-                  {wallet ? (
-                    RouteItems.map((item) => {
-                      return (
-                        <Button key={item.name}>
-                          <Link to={item.path}>{item.name}</Link>
-                        </Button>
-                      );
-                    })
-                  ) : (
-                    <Button key={RouteItems[0].name}>
-                      <Link to={RouteItems[0].path}>{RouteItems[0].name}</Link>
-                    </Button>
-                  )}
-                </ButtonGroup>
-                <HStack spacing="3">
-                  {/*<Button variant="ghost">Go To Meta!</Button>*/}
-                  {wallet ? (
-                    <Text maxWidth={20} noOfLines={1}>
-                      {wallet}
-                    </Text>
-                  ) : (
-                    <Button
-                      onClick={web3Handler}
-                      colorScheme="teal"
-                      variant="outline"
-                    >
-                      Go To Meta!
-                    </Button>
-                  )}
-                </HStack>
-              </Flex>
+    // <Container py={{ base: '4', lg: '5' }}>
+    <div
+      style={{ paddingTop: '20px', paddingLeft: '50px', paddingRight: '50px' }}
+    >
+      <HStack spacing="10" justify="space-between">
+        <Flex style={{ width: '80%' }} justify="space-between" flex="1">
+          <ButtonGroup variant="link" spacing="8">
+            <Button key={'Home'}>
+              <Link to={RoutePaths.HOME}>Home</Link>
+            </Button>
+            {!user && (
+              <>
+                <Button key={'Login'}>
+                  <Link to={RoutePaths.LOGIN}>Login</Link>
+                </Button>
+                <Button key={'Sign Up'}>
+                  <Link to={RoutePaths.SIGN_UP}>Sign Up</Link>
+                </Button>
+              </>
+            )}
+            {user && (
+              <>
+                {wallet && checkAddressEquality(owner, wallet ? wallet : '') && (
+                  <Button key={'Create'}>
+                    <Link to={RoutePaths.CREATE}>Create</Link>
+                  </Button>
+                )}
+                <Button key={'Listings'}>
+                  <Link to={RoutePaths.MY_LISTINGS}>My Listings</Link>
+                </Button>
+                <Button key={'Purchase'}>
+                  <Link to={RoutePaths.MY_PURCHASES}>My NFT&aposs</Link>
+                </Button>
+              </>
+            )}
+          </ButtonGroup>
+          <HStack spacing="3">
+            {user && !wallet ? (
+              <Button
+                onClick={web3Handler}
+                colorScheme="teal"
+                variant="outline"
+              >
+                Connect Wallet
+              </Button>
             ) : (
-              <IconButton
-                variant="ghost"
-                icon={<FiMenu fontSize="1.25rem" />}
-                aria-label="Open Menu"
-              />
+              <p>{cropAddress(wallet, 10)}</p>
+            )}
+            {user && (
+              <Button
+                onClick={() => {
+                  // console.log('logout');
+                }}
+              >
+                Logout
+              </Button>
             )}
           </HStack>
-        </Container>
-      </Box>
-    </Box>
+        </Flex>
+      </HStack>
+    </div>
+    // </Container>
   );
 };
 

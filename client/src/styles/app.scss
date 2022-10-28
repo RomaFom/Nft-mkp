@@ -1,0 +1,31 @@
+html {
+  box-sizing: border-box;
+  font-family: var(--secondary-font);
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-overflow-scrolling: touch !important;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+div,
+span,
+a,
+button,
+{
+  color: var(--grey-lignt);
+}
+
+body {
+  //min-height: 100vh;
+
+  background-color: var(--dark-grey-main) !important;
+}
+
+.invalid{
+  border-color: var(--error-red) !important;
+}

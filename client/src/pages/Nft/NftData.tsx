@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { PageBasicProps } from "@/types";
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { PageBasicProps } from '@/types';
 
 const NftData: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
   const { id } = useParams();
 
-  const loadNftData = async () => {
+  const loadNftData = async (): Promise<void> => {
     try {
       const item = await marketPlace.items(id);
       const boughtFilter = marketPlace.filters.Bought(
@@ -14,7 +15,7 @@ const NftData: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
         null,
         null,
         null,
-        null
+        null,
       );
 
       const offersFilter = marketPlace.filters.Offered(
@@ -22,7 +23,7 @@ const NftData: React.FC<PageBasicProps> = ({ marketPlace, nft, wallet }) => {
         item.nft,
         null,
         null,
-        null
+        null,
       );
       const res_bought = await marketPlace.queryFilter(boughtFilter);
       const res_offers = await marketPlace.queryFilter(offersFilter);

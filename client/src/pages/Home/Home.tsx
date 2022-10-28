@@ -1,19 +1,21 @@
-import React, { useCallback, useEffect } from "react";
-import { MarketplaceItem } from "@/types";
-import NftCard from "@/components/NftCard";
-import GridLoader from "@/components/Loaders/GridLoader";
-import { Button } from "@chakra-ui/react";
-import PageWrapper from "@/components/Layout/PageWrapper";
-import { checkAddressEquality } from "../../../utils/helpers";
-import { Transaction } from "../../../utils/api";
-import { useDapp } from "@/DappContext";
+import { Box, Button } from '@chakra-ui/react';
+import React, { useCallback, useEffect } from 'react';
+
+import PageWrapper from '@/components/Layout/PageWrapper';
+import { GridLoader } from '@/components/Loaders';
+import NftCard from '@/components/NftCard';
+import { useDapp } from '@/DappContext';
+import { MarketplaceItem } from '@/types';
+
+import { Transaction } from '../../../utils/api';
+import { checkAddressEquality } from '../../../utils/helpers';
 
 const Home: React.FC = () => {
   const [items, setItems] = React.useState<Array<MarketplaceItem>>([]);
   const [loading, setLoading] = React.useState(false);
   const { nftContract, wallet, web3Handler, Mkp } = useDapp();
 
-  const loadMarketPlaceItems = async () => {
+  const loadMarketPlaceItems = async (): Promise<void> => {
     try {
       setLoading(true);
       const itemCount = await Mkp.getItemsCount();
@@ -42,7 +44,7 @@ const Home: React.FC = () => {
       }
       setItems(items);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     } finally {
       setLoading(false);
     }
@@ -50,23 +52,19 @@ const Home: React.FC = () => {
 
   const buyItem = useCallback(
     async (item: MarketplaceItem) => {
-      const res = await Mkp.buyItem(item.itemId, item.totalPrice!);
+      const res = await Mkp.buyItem(item.itemId, item.totalPrice);
       await Transaction.addNew({
         wallet: wallet,
         tx_hash: res.transactionHash,
       });
       await loadMarketPlaceItems();
     },
-    [Mkp, nftContract, wallet]
+    [Mkp, nftContract, wallet],
   );
 
   useEffect(() => {
     if (Mkp && nftContract) {
-      loadMarketPlaceItems()
-        .then(() => {})
-        .catch((error: any) => {
-          console.log(error);
-        });
+      loadMarketPlaceItems();
 
       // const provider = new ethers.providers.Web3Provider(window.ethereum);
       //  provider.getBalance(wallet).then((balance: any) => {
@@ -101,7 +99,7 @@ const Home: React.FC = () => {
                       colorScheme="teal"
                       variant="outline"
                       onClick={async () => {
-                        console.log(item);
+                        // console.log(item);
                         if (!wallet) {
                           await web3Handler();
                           return;
@@ -110,7 +108,7 @@ const Home: React.FC = () => {
                         }
                       }}
                     >
-                      {wallet ? "Buy" : "Login to buy"}
+                      {wallet ? 'Buy' : 'Form-Login to buy'}
                     </Button>
                   )}
                 </>

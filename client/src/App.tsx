@@ -1,13 +1,15 @@
-import React, { Suspense } from "react";
-import { ethers } from "ethers";
-import { useRoutes } from "react-router-dom";
-import { routes } from "./routes";
-import { DappContext, IDappCtx } from "@/DappContext";
-import Navbar from "@/components/Navbar";
-import { Marketplace } from "@/contract-integration/marketplace";
-import useWeb3 from "@/hooks/useWeb3";
-function App() {
-  const { account, loading, owner, marketPlace, nft, web3Handler } = useWeb3();
+import { ethers } from 'ethers';
+import React, { Suspense } from 'react';
+import { useRoutes } from 'react-router-dom';
+
+import Navbar from '@/components/Navbar';
+import { Marketplace } from '@/contract-integration/marketplace';
+import { DappContext, IDappCtx } from '@/DappContext';
+import useWeb3 from '@/hooks/useWeb3';
+
+import { routes } from './routes';
+function App(): React.ReactElement {
+  const { account, owner, marketPlace, nft, web3Handler } = useWeb3();
 
   const dappCtxValues: IDappCtx = {
     nftContract: nft,

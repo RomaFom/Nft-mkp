@@ -1,12 +1,11 @@
-import React from "react";
-import { BallTriangle } from "react-loader-spinner";
+import React from 'react';
+import { BallTriangle } from 'react-loader-spinner';
 
-type Props = {};
-const MainLoader: React.FC<Props> = ({}) => {
+const MainLoader: React.FC = () => {
   return (
     <>
       <BallTriangle />
     </>
   );
 };
-export default MainLoader;
+export { MainLoader };

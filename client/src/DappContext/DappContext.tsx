@@ -1,6 +1,7 @@
-import { createContext, useContext } from "react";
-import { ethers } from "ethers";
-import { Marketplace } from "@/contract-integration/marketplace";
+import { ethers } from 'ethers';
+import { createContext, useContext } from 'react';
+
+import { Marketplace } from '@/contract-integration/marketplace';
 
 export interface IDappCtx {
   nftContract: ethers.Contract | null;
@@ -19,8 +20,8 @@ export interface IDappCtx {
 const DappCtxDefaultValues: IDappCtx = {
   nftContract: null,
   marketplaceContract: null,
-  wallet: "",
-  owner: "",
+  wallet: '',
+  owner: '',
   web3Handler: () => new Promise(() => null),
   Mkp: new Marketplace({} as ethers.Contract),
 
@@ -32,6 +33,6 @@ const DappCtxDefaultValues: IDappCtx = {
 
 export const DappContext = createContext<IDappCtx>(DappCtxDefaultValues);
 
-export const useDapp = () => {
+export const useDapp = (): IDappCtx => {
   return useContext(DappContext);
 };

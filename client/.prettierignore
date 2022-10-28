@@ -1,0 +1,8 @@
+.github
+node_modules
+dist
+coverage
+.eslintcache
+yarn.lock
+scripts/*.js
+*.md

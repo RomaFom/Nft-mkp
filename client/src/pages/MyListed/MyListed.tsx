@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { MarketplaceItem } from "@/types";
-import GridLoader from "@/components/Loaders/GridLoader";
-import PageWrapper from "@/components/Layout/PageWrapper";
-import NftCard from "@/components/NftCard";
-import { checkAddressEquality, fromBigToEth } from "../../../utils/helpers";
-import { useDapp } from "@/DappContext";
+import React, { useEffect, useState } from 'react';
+
+import PageWrapper from '@/components/Layout/PageWrapper';
+import { GridLoader } from '@/components/Loaders';
+import NftCard from '@/components/NftCard';
+import { useDapp } from '@/DappContext';
+import { MarketplaceItem } from '@/types';
+
+import { checkAddressEquality, fromBigToEth } from '../../../utils/helpers';
 
 const MyListed: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -12,7 +14,7 @@ const MyListed: React.FC = () => {
   // const [sold, setSold] = useState<Array<MarketplaceItem>>([]);
   const { marketplaceContract, nftContract, wallet } = useDapp();
 
-  const loadListedItems = async () => {
+  const loadListedItems = async (): Promise<void> => {
     try {
       setLoading(true);
       const itemsCount = await marketplaceContract?.itemCount();
@@ -30,10 +32,10 @@ const MyListed: React.FC = () => {
           const metadata = await response.json();
           //  get final price
           const totalPrice = await marketplaceContract?.getFinalPrice(
-            item.itemId
+            item.itemId,
           );
 
-          let itemData: MarketplaceItem = {
+          const itemData: MarketplaceItem = {
             totalPrice,
             itemId: item.itemId,
             seller: item.seller,
@@ -54,7 +56,7 @@ const MyListed: React.FC = () => {
       }
       setListed(listed);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     } finally {
       setLoading(false);
     }

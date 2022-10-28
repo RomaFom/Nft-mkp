@@ -1,0 +1,13 @@
+@import 'colors';
+
+:root,
+:before,
+:after {
+  // Colors
+  --dark-grey-main: #{$col-total-dark};
+  --dark-grey-medium: #{$col-dark-medium};
+  --grey-lignt: #{$col-main-grey};
+  --main-green: #{$col-main-green};
+  --error-red: #{$red-error};
+
+}

@@ -1,27 +1,39 @@
-import React, { useState } from "react";
-import { ethers } from "ethers";
-import MarketplaceAddress from "../../contracts/Marketplace-address.json";
-import MarketplaceAbi from "../../contracts/Marketplace.json";
-import NFTAddress from "../../contracts/NFT-address.json";
-import NFTAbi from "../../contracts/NFT.json";
+import { ethers } from 'ethers';
+import React, { useState } from 'react';
 
-export const UseWeb3 = () => {
-  const [account, setAccount] = useState<string>("");
+import MarketplaceAbi from '../../contracts/Marketplace.json';
+import MarketplaceAddress from '../../contracts/Marketplace-address.json';
+import NFTAbi from '../../contracts/NFT.json';
+import NFTAddress from '../../contracts/NFT-address.json';
+
+interface IUseWeb3 {
+  marketPlace: ethers.Contract | null;
+  nft: ethers.Contract | null;
+  account: string;
+  loading: boolean;
+  owner: string;
+  web3Handler: () => Promise<void>;
+}
+
+export const UseWeb3 = (): IUseWeb3 => {
+  const [account, setAccount] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const [owner, setOwner] = useState("");
+  const [owner, setOwner] = useState('');
   const [nft, setNft] = useState<ethers.Contract | null>(null);
   const [marketPlace, setMarketPlace] = useState<ethers.Contract | null>(null);
 
-  const web3Handler = async () => {
+  const web3Handler = async (): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     if (!provider) return;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
+      method: 'eth_requestAccounts',
     });
     if (!accounts || accounts.length === 0) {
-      setAccount("");
+      setAccount('');
       return;
     }
     setAccount(accounts[0]);
@@ -31,7 +43,10 @@ export const UseWeb3 = () => {
     await loadContract(signer);
   };
 
-  const getSigner = async () => {
+  const getSigner = async (): Promise<
+    ethers.providers.JsonRpcSigner | undefined
+  > => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     if (!provider) return;
@@ -40,13 +55,15 @@ export const UseWeb3 = () => {
     return signer;
   };
 
-  const loadContract = async (signer: any) => {
+  const loadContract = async (
+    signer: ethers.providers.JsonRpcSigner,
+  ): Promise<void> => {
     try {
       setLoading(true);
       const marketplace = new ethers.Contract(
         MarketplaceAddress.address,
         MarketplaceAbi.abi,
-        signer
+        signer,
       );
       if (!marketplace) return;
       setMarketPlace(marketplace);
@@ -56,35 +73,37 @@ export const UseWeb3 = () => {
       if (!nft) return;
       setNft(nft);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     } finally {
       setLoading(false);
     }
   };
 
-  const checkConnection = async () => {
+  const checkConnection = async (): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const account = await window.ethereum.request({ method: "eth_accounts" });
+    const account = await window.ethereum.request({ method: 'eth_accounts' });
     // console.log(account);
     if (account[0]) {
       // console.log("Account found");
       await web3Handler();
       return;
     }
-    setAccount("");
+    setAccount('');
     await connectWithDummyAccount();
   };
 
-  const connectWithDummyAccount = async () => {
+  const connectWithDummyAccount = async (): Promise<void> => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const newSigner = await provider.getSigner(
-      "0x9e763e727FF07264fBdd78e35dc900d3f4948867"
+      '0x9e763e727FF07264fBdd78e35dc900d3f4948867',
     );
     const marketplace = new ethers.Contract(
       MarketplaceAddress.address,
       MarketplaceAbi.abi,
-      newSigner
+      newSigner,
     );
     if (!marketplace) return;
     setMarketPlace(marketplace);
@@ -95,13 +114,15 @@ export const UseWeb3 = () => {
   };
 
   React.useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    window.ethereum.on("chainChanged", () => {
-      console.log("chainChanged");
+    window.ethereum.on('chainChanged', () => {
+      // console.log('chainChanged');
     });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    window.ethereum.on("accountsChanged", () => {
-      console.log("accountsChanged");
+    window.ethereum.on('accountsChanged', () => {
+      // console.log('accountsChanged');
       checkConnection();
       return;
     });

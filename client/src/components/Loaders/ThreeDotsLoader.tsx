@@ -1,5 +1,7 @@
-import React from "react";
-import ContentLoader from "react-content-loader";
+import ContentLoader from 'react-content-loader';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+/* eslint-disable */
 
 const ThreeDots = (props: any) => (
   <ContentLoader
@@ -16,10 +18,10 @@ const ThreeDots = (props: any) => (
 );
 
 ThreeDots.metadata = {
-  name: "RioF",
-  github: "clariokids",
-  description: "Three Dots",
-  filename: "ThreeDots",
+  name: 'RioF',
+  github: 'clariokids',
+  description: 'Three Dots',
+  filename: 'ThreeDots',
 };
 
-export default ThreeDots;
+export { ThreeDots };

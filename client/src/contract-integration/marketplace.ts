@@ -1,5 +1,6 @@
-import { ethers } from "ethers";
-import { MarketplaceItem } from "@/types";
+import { ethers } from 'ethers';
+
+import { MarketplaceItem } from '@/types';
 
 export class Marketplace {
   contract: ethers.Contract;
@@ -22,7 +23,7 @@ export class Marketplace {
 
   async buyItem(
     itemId: ethers.BigNumber,
-    price: ethers.BigNumber
+    price: ethers.BigNumber,
   ): Promise<ethers.ContractReceipt> {
     return await (
       await this.contract.buyItem(itemId, {

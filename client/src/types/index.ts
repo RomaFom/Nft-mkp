@@ -1,2 +1,2 @@
-export * from "./global";
-export * from "./transaction.interface";
+export * from './global';
+export * from './transaction.interface';

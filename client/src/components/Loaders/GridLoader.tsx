@@ -1,7 +1,8 @@
-import React from "react";
-import ContentLoader from "react-content-loader";
+import React from 'react';
+import ContentLoader from 'react-content-loader';
 
-const GridLoader = (props: any) => (
+/* eslint-disable */
+const GridLoader: React.FC = (props: any) => (
   <ContentLoader viewBox="0 0 900 900" {...props}>
     <rect x="30" y="20" rx="0" ry="0" width="130" height="23" />
     <rect x="30" y="60" rx="0" ry="0" width="200" height="120" />
@@ -39,4 +40,4 @@ const GridLoader = (props: any) => (
 //   filename: "Youtube", // filename of your loader
 // };
 
-export default GridLoader;
+export { GridLoader };

@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, SimpleGrid } from "@chakra-ui/react";
+import { Box, SimpleGrid } from '@chakra-ui/react';
+import React from 'react';
 
 type Props = {
   children: React.ReactNode;
@@ -7,7 +7,7 @@ type Props = {
 const PageWrapper: React.FC<Props> = ({ children }) => {
   return (
     <Box w="100%" p={5}>
-      <SimpleGrid columns={[2, 3, 4]} spacing="40px">
+      <SimpleGrid columns={[1, 2, 3, 4, 5]} spacing="40px">
         {children}
       </SimpleGrid>
     </Box>

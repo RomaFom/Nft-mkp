@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 
 export type PageBasicProps = {
   marketPlace: ethers.Contract;
@@ -11,10 +11,10 @@ export type MarketplaceItem = {
   tokenId: ethers.BigNumber;
   nft: string;
   price: ethers.BigNumber;
-  listingPrice?: ethers.BigNumber;
+  listingPrice: ethers.BigNumber;
   seller: string;
   isSold: boolean;
-  totalPrice?: ethers.BigNumber;
+  totalPrice: ethers.BigNumber;
   name: string;
   description: string;
   image: string;

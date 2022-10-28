@@ -1,1 +1,1 @@
-export { default } from "./MyPurchase";
+export { default } from './MyPurchase';

@@ -1,24 +1,26 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { MarketplaceItem } from "@/types";
-import GridLoader from "@/components/Loaders/GridLoader";
-import PageWrapper from "@/components/Layout/PageWrapper";
-import NftCard from "@/components/NftCard";
-import { checkAddressEquality, fromBigToEth } from "../../../utils/helpers";
-import { Button } from "@chakra-ui/react";
-import { BigNumber, ethers } from "ethers";
-import { Transaction } from "../../../utils/api";
-import { useNavigate } from "react-router-dom";
-import { useDapp } from "@/DappContext";
+import { Button } from '@chakra-ui/react';
+import { BigNumber, ethers } from 'ethers';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import PageWrapper from '@/components/Layout/PageWrapper';
+import { GridLoader } from '@/components/Loaders';
+import NftCard from '@/components/NftCard';
+import { useDapp } from '@/DappContext';
+import { MarketplaceItem } from '@/types';
+
+import { Transaction } from '../../../utils/api';
+import { checkAddressEquality, fromBigToEth } from '../../../utils/helpers';
 const MyPurchase: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [purchased, setPurchased] = useState<MarketplaceItem[]>(
-    [] as MarketplaceItem[]
+    [] as MarketplaceItem[],
   );
   const navigate = useNavigate();
   const { marketplaceContract, nftContract, wallet } = useDapp();
 
   const TEMP_ADD_ETH = 10;
-  const loadPurchasedItems = async () => {
+  const loadPurchasedItems = async (): Promise<void> => {
     try {
       setLoading(true);
 
@@ -28,13 +30,14 @@ const MyPurchase: React.FC = () => {
         null,
         null,
         null,
-        wallet
+        wallet,
       );
-      const results = await marketplaceContract?.queryFilter(filter || {});
-      // console.log(await results[0].getBlock());
+      const results =
+        (await marketplaceContract?.queryFilter(filter || {})) || [];
+
       const purchases = [] as MarketplaceItem[];
       await Promise.all(
-        results!.map(async (item) => {
+        results.map(async item => {
           const mkpItem: MarketplaceItem = item?.args as any;
           const mkp = await marketplaceContract?.items(mkpItem.itemId);
           const owner = await nftContract?.ownerOf(mkp.tokenId);
@@ -47,7 +50,7 @@ const MyPurchase: React.FC = () => {
           const response = await fetch(url);
           const metadata = await response.json();
           const totalPrice = await marketplaceContract?.getFinalPrice(
-            mkpItem.itemId
+            mkpItem.itemId,
           );
           purchases.push({
             totalPrice,
@@ -62,7 +65,7 @@ const MyPurchase: React.FC = () => {
             description: metadata.description,
             image: metadata.image,
           });
-        })
+        }),
       );
 
       setPurchased(purchases);
@@ -79,37 +82,42 @@ const MyPurchase: React.FC = () => {
 
   const listItem = useCallback(
     async (itemId: any, listingPrice: any) => {
-      await (
-        await nftContract?.setApprovalForAll(marketplaceContract?.address, true)
-      ).wait();
-      const res = await (
-        await marketplaceContract?.listItem(itemId, listingPrice)
-      ).wait();
+      if (nftContract && marketplaceContract) {
+        await (
+          await nftContract.setApprovalForAll(
+            marketplaceContract?.address,
+            true,
+          )
+        ).wait();
+        const res = await (
+          await marketplaceContract.listItem(itemId, listingPrice)
+        ).wait();
 
-      await Transaction.addNew({
-        wallet: wallet,
-        tx_hash: res.transactionHash,
-      });
+        await Transaction.addNew({
+          wallet: wallet,
+          tx_hash: res.transactionHash,
+        });
 
-      await loadPurchasedItems();
+        await loadPurchasedItems();
+      }
     },
-    [nftContract, marketplaceContract]
+    [nftContract, marketplaceContract],
   );
 
-  const handleClick = async (id: BigNumber) => {
+  const handleClick = (id: BigNumber): void => {
     const parsedId = parseInt(id._hex);
-    navigate("/nft/" + parsedId);
+    navigate('/nft/' + parsedId);
   };
 
   return loading ? (
     <GridLoader />
   ) : (
     <PageWrapper>
-      {purchased.map((item) => {
+      {purchased.map(item => {
         return (
           <NftCard
             onClick={() => handleClick(item.itemId as unknown as BigNumber)}
-            item={item!}
+            item={item}
             footer={
               <>
                 {/*<div>*/}
@@ -118,13 +126,13 @@ const MyPurchase: React.FC = () => {
                 {/*  </p>*/}
                 {/*</div>*/}
                 {/*<br />*/}
-                {item!.price < item!.listingPrice! ? (
+                {item.price < item.listingPrice ? (
                   <p>Listed</p>
                 ) : (
                   <div>
-                    <p style={{ paddingBottom: "10px" }}>
-                      List for{" "}
-                      {+fromBigToEth(item!.listingPrice) + TEMP_ADD_ETH} ETH
+                    <p style={{ paddingBottom: '10px' }}>
+                      List for {+fromBigToEth(item.listingPrice) + TEMP_ADD_ETH}{' '}
+                      ETH
                     </p>
                     <Button
                       size="lg"
@@ -133,12 +141,12 @@ const MyPurchase: React.FC = () => {
                       variant="outline"
                       onClick={() =>
                         listItem(
-                          item!.itemId,
+                          item.itemId,
                           ethers.utils.parseEther(
                             (
-                              +fromBigToEth(item!.listingPrice) + TEMP_ADD_ETH
-                            ).toString()
-                          )
+                              +fromBigToEth(item.listingPrice) + TEMP_ADD_ETH
+                            ).toString(),
+                          ),
                         )
                       }
                     >
@@ -148,7 +156,7 @@ const MyPurchase: React.FC = () => {
                 )}
               </>
             }
-            key={item!.tokenId.toNumber()}
+            key={item.tokenId.toNumber()}
           />
         );
       })}

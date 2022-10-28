@@ -1,0 +1,14 @@
+.formWrapper {
+  display: grid;
+  justify-content: center;
+  row-gap: to-rem(8);
+
+  .buttonContainer {
+    display: flex;
+    justify-self: center;
+    margin-top: to-rem(10);
+    width: 40%;
+  }
+
+}
+

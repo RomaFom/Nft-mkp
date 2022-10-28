@@ -1,10 +1,11 @@
-import React from "react";
-import "./NftCard.scss";
-import { MarketplaceItem } from "@/types";
-import { ethers } from "ethers";
-import nftImg from "@/assets/icon-ethereum.svg";
-import { Button } from "@chakra-ui/react";
-import { fromBigToEth } from "../../../utils/helpers";
+import './NftCard.scss';
+
+import React from 'react';
+
+import nftImg from '@/assets/icon-ethereum.svg';
+import { MarketplaceItem } from '@/types';
+
+import { fromBigToEth } from '../../../utils/helpers';
 type Props = {
   item: MarketplaceItem;
   footer: React.ReactNode;
@@ -17,18 +18,20 @@ const NftCard: React.FC<Props> = ({ item, footer, onClick }) => {
     <>
       <div className="card">
         <div className="card__head">
+          {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
           <div onClick={onClick} className="card__product-img">
-            <img src={item.image} />
+            <img alt={item.image} src={item.image} />
           </div>
         </div>
         <div className="card__body">
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a href="#">
             <h3 className="card__title">{item.name}</h3>
           </a>
           <p className="card__text">{item.description}</p>
           <div className="wrapper">
             <div className="card__price">
-              <img src={nftImg} className="card__icon" />
+              <img alt={'nftImg'} src={nftImg} className="card__icon" />
               <span>{priceInEther} ETH</span>
             </div>
             <div className="card__countdown">

@@ -1,1 +1,1 @@
-export { default } from "./NftData";
+export { default } from './NftData';
