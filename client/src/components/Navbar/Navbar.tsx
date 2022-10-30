@@ -13,13 +13,14 @@ import { Link } from 'react-router-dom';
 
 import { useDapp } from '@/DappContext';
 import { RoutePaths } from '@/routes';
+import { useUser } from '@/UserContext/UserContext';
 
 import { checkAddressEquality, cropAddress } from '../../../utils/helpers';
 
 const Navbar: React.FC = () => {
   const { wallet, owner, web3Handler } = useDapp();
   // const isDesktop = useBreakpointValue({ base: false, lg: true });
-  const user = false;
+  const { user, setUser } = useUser();
 
   return (
     // <Container py={{ base: '4', lg: '5' }}>
@@ -53,7 +54,7 @@ const Navbar: React.FC = () => {
                   <Link to={RoutePaths.MY_LISTINGS}>My Listings</Link>
                 </Button>
                 <Button key={'Purchase'}>
-                  <Link to={RoutePaths.MY_PURCHASES}>My NFT&aposs</Link>
+                  <Link to={RoutePaths.MY_PURCHASES}>My NFT's</Link>
                 </Button>
               </>
             )}
@@ -72,7 +73,10 @@ const Navbar: React.FC = () => {
             )}
             {user && (
               <Button
+                colorScheme="whiteAlpha"
                 onClick={() => {
+                  localStorage.removeItem('auth_mkp');
+                  setUser(null);
                   // console.log('logout');
                 }}
               >

@@ -12,3 +12,54 @@
 @function hex-to-rgb($color) {
   @return red($color) + ', ' + green($color) + ', ' + blue($color);
 }
+
+
+@mixin respond($breakpoint) {
+  @if($breakpoint=="xs") {
+
+    // xs
+    @media only screen and (max-width: 575px) {
+      @content;
+    }
+  }
+
+  @if($breakpoint=="sm") {
+
+    // sm
+    @media only screen and (max-width: 767px) {
+      @content;
+    }
+  }
+
+  @if($breakpoint=="md") {
+
+    // md
+    @media only screen and (max-width: 991px) {
+      @content;
+    }
+  }
+
+  @if($breakpoint=="lg") {
+
+    // lg
+    @media only screen and (max-width: 1199px) {
+      @content;
+    }
+  }
+
+  @if ($breakpoint=="xl") {
+
+    // xl
+    @media only screen and (min-width: 1200px) {
+      @content;
+    }
+  }
+
+  @if($breakpoint=="xxl") {
+
+    // xxl
+    @media only screen and (min-width: 1800px) {
+      @content;
+    }
+  }
+}

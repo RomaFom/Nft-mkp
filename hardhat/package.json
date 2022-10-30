@@ -13,6 +13,10 @@
   "scripts": {
     "start": "npx hardhat node --network hardhat",
     "test": "npx hardhat test",
+    "compile-abi-colc-mkp": "solc --optimize --base-path '/' --include-path './node_modules' --abi ./contracts/Marketplace.sol -o build",
+    "compile-bin-solc-mkp": "solc --optimize --base-path '/' --include-path './node_modules' --bin ./contracts/Marketplace.sol -o build",
+    "compile-go-file-mkp": "abigen --abi=./contracts/build/Marketplace.abi --bin=./contracts/build/Marketplace.bin --pkg=sc_api --out=../../GoMkp/pkg/smart-contracts/MarketplaceSC.go",
+    "compile-all-mkp": "npm run compile-abi-colc-mkp && npm run compile-bin-solc-mkp && npm run compile-go-file-mkp",
     "deploy-no-compile": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network localhost",
     "deploy-rinkeby": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network rinkeby",

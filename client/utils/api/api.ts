@@ -4,7 +4,12 @@ import { ILoginForm } from '@/components/Forms/Form-Login/types';
 import { IFormSignUp } from '@/components/Forms/Form-Sign-Up/types';
 import { ISendTx } from '@/types';
 
-import { IUserResponse, IUserResponseLogin } from './types';
+import {
+  IItemCountResponse,
+  IUserDataResponse,
+  IUserResponse,
+  IUserResponseLogin,
+} from './types';
 
 const instance = axios.create({
   baseURL: 'http://localhost:8080/',
@@ -61,6 +66,11 @@ export const User = {
     requests.post('/auth/sign-up', user),
   login: (user: ILoginForm): Promise<IUserResponseLogin> =>
     requests.post('/auth/sign-in', user),
-  getUserData: (token: string): Promise<any> =>
+  getUserData: (token: string): Promise<IUserDataResponse> =>
     requests.get('/auth/get-user-data', `Bearer ${token}`),
+};
+
+export const MkpApi = {
+  getCount: (): Promise<IItemCountResponse> =>
+    requests.get('/marketplace/item-count'),
 };

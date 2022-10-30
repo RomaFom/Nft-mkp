@@ -11,3 +11,12 @@ GAS_REPORT=true npx hardhat myListed
 npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
+
+tutorial on https://medium.com/nerd-for-tech/smart-contract-with-golang-d208c92848a9
+
+solc --optimize --base-path '/' --include-path '../node_modules/' --abi ./Marketplace.sol -o build
+
+solc --optimize --base-path '/' --include-path '../node_modules/' --bin ./Marketplace.sol -o build
+
+
+abigen --abi=./build/Marketplace.abi --bin=./build/Marketplace.bin --pkg=api --out=../../../GoMkp/pkg/smart-contracts/MarketplaceSC.go

@@ -1,3 +1,5 @@
+import { IUser } from '@/UserContext/UserContext';
+
 export interface IResponseError {
   status: number;
   error: {
@@ -13,6 +15,12 @@ interface IResponse {
   data?: any;
 }
 
+export interface IItemCountResponse extends IResponse {
+  data: {
+    count: number;
+  };
+}
+
 export interface IUserResponse {
   status: number;
   error?: {
@@ -26,5 +34,11 @@ export interface IUserResponse {
 export interface IUserResponseLogin extends IResponse {
   data: {
     token: string;
+  };
+}
+
+export interface IUserDataResponse extends IResponse {
+  data: {
+    user: IUser;
   };
 }

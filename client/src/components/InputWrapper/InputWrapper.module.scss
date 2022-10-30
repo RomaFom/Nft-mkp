@@ -20,6 +20,20 @@
     &.invalid {
       border: var(--error-red) solid 2px;
     }
+
+    @include respond("md"){
+      width: 70vw
+    }
+
+    @include respond("sm"){
+      width: 60vw
+    }
+
+    @include respond("xs"){
+      width: 85vw
+    }
+
+
   }
 
   span{

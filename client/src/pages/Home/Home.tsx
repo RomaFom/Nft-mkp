@@ -1,29 +1,34 @@
-import { Box, Button } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import React, { useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import PageWrapper from '@/components/Layout/PageWrapper';
 import { GridLoader } from '@/components/Loaders';
 import NftCard from '@/components/NftCard';
 import { useDapp } from '@/DappContext';
 import { MarketplaceItem } from '@/types';
+import { useUser } from '@/UserContext/UserContext';
 
-import { Transaction } from '../../../utils/api';
+import { MkpApi, Transaction } from '../../../utils/api';
 import { checkAddressEquality } from '../../../utils/helpers';
 
 const Home: React.FC = () => {
   const [items, setItems] = React.useState<Array<MarketplaceItem>>([]);
   const [loading, setLoading] = React.useState(false);
   const { nftContract, wallet, web3Handler, Mkp } = useDapp();
-
+  const { user } = useUser();
+  const navigate = useNavigate();
   const loadMarketPlaceItems = async (): Promise<void> => {
     try {
       setLoading(true);
-      const itemCount = await Mkp.getItemsCount();
+      const { data } = await MkpApi.getCount();
+
       const items: MarketplaceItem[] = [];
 
-      for (let i = 1; i <= itemCount; i++) {
+      for (let i = 1; i <= data.count; i++) {
         const item: MarketplaceItem = await Mkp.items(i);
 
+        console.log(item);
         if (!item.isSold) {
           const ipfsUrlData = await nftContract?.tokenURI(item.tokenId);
           const response = await fetch(ipfsUrlData);
@@ -76,6 +81,63 @@ const Home: React.FC = () => {
       // console.log(rpcProvider);
     }
   }, [nftContract, wallet]);
+
+  interface FooterProps {
+    item: MarketplaceItem;
+  }
+
+  const RenderFooter: React.FC<FooterProps> = ({ item }) => {
+    if (!user) {
+      return (
+        <Button
+          size="lg"
+          w="100%"
+          colorScheme="teal"
+          variant="outline"
+          onClick={() => {
+            navigate('/login');
+          }}
+        >
+          Login to buy
+        </Button>
+      );
+    }
+    if (user && !wallet) {
+      return (
+        <Button
+          size="lg"
+          w="100%"
+          colorScheme="teal"
+          variant="outline"
+          onClick={() => {
+            web3Handler();
+          }}
+        >
+          Connect Wallet
+        </Button>
+      );
+    }
+    if (user && wallet && checkAddressEquality(wallet, item.seller)) {
+      return <>My Listing</>;
+    }
+    if (user && wallet) {
+      return (
+        <Button
+          size="lg"
+          w="100%"
+          colorScheme="teal"
+          variant="outline"
+          onClick={() => {
+            buyItem(item);
+          }}
+        >
+          Buy NFT
+        </Button>
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       {loading ? (
@@ -86,33 +148,7 @@ const Home: React.FC = () => {
             <NftCard
               key={index}
               item={item}
-              footer={
-                <>
-                  {checkAddressEquality(wallet, item.seller) ? (
-                    <>
-                      <>My Listing</>
-                    </>
-                  ) : (
-                    <Button
-                      size="lg"
-                      w="100%"
-                      colorScheme="teal"
-                      variant="outline"
-                      onClick={async () => {
-                        // console.log(item);
-                        if (!wallet) {
-                          await web3Handler();
-                          return;
-                        } else {
-                          await buyItem(item);
-                        }
-                      }}
-                    >
-                      {wallet ? 'Buy' : 'Form-Login to buy'}
-                    </Button>
-                  )}
-                </>
-              }
+              footer={<RenderFooter item={item} />}
             />
           ))}
         </PageWrapper>

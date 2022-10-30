@@ -1,7 +1,7 @@
 import { FC, ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { useDapp } from '@/DappContext';
+import { useUser } from '@/UserContext/UserContext';
 
 interface Props {
   redirectPath?: string;
@@ -9,8 +9,9 @@ interface Props {
 }
 
 export const PrivateRoute: FC<Props> = ({ redirectPath = '/', children }) => {
-  const { wallet } = useDapp();
-  return !wallet ? (
+  const { user } = useUser();
+
+  return !user ? (
     <Navigate to={redirectPath} replace state={{ isRedirect: true }} />
   ) : (
     <>{children}</>

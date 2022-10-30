@@ -1,25 +1,33 @@
 import './NftCard.scss';
 
-import React from 'react';
+import { Button } from '@chakra-ui/react';
+import { jsx } from '@emotion/react';
+import React, { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import nftImg from '@/assets/icon-ethereum.svg';
+import { useDapp } from '@/DappContext';
 import { MarketplaceItem } from '@/types';
+import { useUser } from '@/UserContext/UserContext';
 
-import { fromBigToEth } from '../../../utils/helpers';
+import { Transaction } from '../../../utils/api';
+import { checkAddressEquality, fromBigToEth } from '../../../utils/helpers';
+import JSX = jsx.JSX;
 type Props = {
   item: MarketplaceItem;
   footer: React.ReactNode;
   onClick?: () => void;
 };
+
 const NftCard: React.FC<Props> = ({ item, footer, onClick }) => {
-  // console.log(item);
   const priceInEther = fromBigToEth(item.listingPrice);
+
   return (
     <>
       <div className="card">
         <div className="card__head">
           {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-          <div onClick={onClick} className="card__product-img">
+          <div className="card__product-img">
             <img alt={item.image} src={item.image} />
           </div>
         </div>

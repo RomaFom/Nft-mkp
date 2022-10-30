@@ -67,50 +67,55 @@ const FormSignUp: React.FC = () => {
 
   return (
     <>
-      <form className={styles.formWrapper} onSubmit={handleSubmit(onSubmit)}>
-        <InputWrapper labelId={'name'} labelText={'Name'}>
-          <input
-            className={cn(errors.name && 'invalid')}
-            autoComplete={'off'}
-            {...register('name')}
-          />
-        </InputWrapper>
+      <form
+        className={cn(styles.formWrapper, styles.centeredMiddle)}
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className={styles.centerY}>
+          <InputWrapper labelId={'name'} labelText={'Name'}>
+            <input
+              className={cn(errors.name && 'invalid')}
+              autoComplete={'off'}
+              {...register('name')}
+            />
+          </InputWrapper>
 
-        <InputWrapper labelId={'username'} labelText={'Username'}>
-          <input
-            className={cn(errors.username && 'invalid')}
-            autoComplete={'off'}
-            {...register('username')}
-          />
-        </InputWrapper>
+          <InputWrapper labelId={'username'} labelText={'Username'}>
+            <input
+              className={cn(errors.username && 'invalid')}
+              autoComplete={'off'}
+              {...register('username')}
+            />
+          </InputWrapper>
 
-        <InputWrapper labelId={'password'} labelText={'Password'}>
-          <input
-            className={cn(errors.password && 'invalid')}
-            autoComplete={'off'}
-            type={'password'}
-            {...register('password')}
-          />
-        </InputWrapper>
+          <InputWrapper labelId={'password'} labelText={'Password'}>
+            <input
+              className={cn(errors.password && 'invalid')}
+              autoComplete={'off'}
+              type={'password'}
+              {...register('password')}
+            />
+          </InputWrapper>
 
-        <InputWrapper labelId={'confirmPassword'} labelText={'Confirm'}>
-          <input
-            className={cn(errors.confirmPassword && 'invalid')}
-            autoComplete={'off'}
-            type={'password'}
-            {...register('confirmPassword')}
-          />
-        </InputWrapper>
+          <InputWrapper labelId={'confirmPassword'} labelText={'Confirm'}>
+            <input
+              className={cn(errors.confirmPassword && 'invalid')}
+              autoComplete={'off'}
+              type={'password'}
+              {...register('confirmPassword')}
+            />
+          </InputWrapper>
 
-        <Button
-          className={styles.buttonContainer}
-          type="submit"
-          colorScheme="teal"
-          size="md"
-          disabled={isSubmitting}
-        >
-          Submit
-        </Button>
+          <Button
+            className={styles.buttonContainer}
+            type="submit"
+            colorScheme="teal"
+            size="md"
+            disabled={isSubmitting}
+          >
+            Submit
+          </Button>
+        </div>
       </form>
     </>
   );

@@ -5,10 +5,10 @@ import { create as ipsfHttpClient } from 'ipfs-http-client';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import styles from '@/components/Forms/Forms.module.scss';
 import { useDapp } from '@/DappContext';
 
 import { Transaction } from '../../../utils/api';
-
 const projectId = import.meta.env.VITE_APP_PROJECT_ID;
 const projectSecret = import.meta.env.VITE_APP_PROJECT_SECRET;
 const auth =
@@ -93,7 +93,7 @@ const Create: React.FC = () => {
   return (
     <>
       <Box w="100%" px={20}>
-        <Stack spacing={3}>
+        <Stack className={styles.formWrapper} spacing={3}>
           <Input
             variant="outline"
             placeholder="NFT Name"
