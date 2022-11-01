@@ -90,28 +90,28 @@ export const UseWeb3 = (): IUseWeb3 => {
       return;
     }
     setAccount('');
-    await connectWithDummyAccount();
+    // await connectWithDummyAccount();
   };
 
-  const connectWithDummyAccount = async (): Promise<void> => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const newSigner = await provider.getSigner(
-      '0x9e763e727FF07264fBdd78e35dc900d3f4948867',
-    );
-    const marketplace = new ethers.Contract(
-      MarketplaceAddress.address,
-      MarketplaceAbi.abi,
-      newSigner,
-    );
-    if (!marketplace) return;
-    setMarketPlace(marketplace);
-
-    const nft = new ethers.Contract(NFTAddress.address, NFTAbi.abi, newSigner);
-    if (!nft) return;
-    setNft(nft);
-  };
+  // const connectWithDummyAccount = async (): Promise<void> => {
+  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //   // @ts-ignore
+  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //   const newSigner = await provider.getSigner(
+  //     '0x9e763e727FF07264fBdd78e35dc900d3f4948867',
+  //   );
+  //   const marketplace = new ethers.Contract(
+  //     MarketplaceAddress.address,
+  //     MarketplaceAbi.abi,
+  //     newSigner,
+  //   );
+  //   if (!marketplace) return;
+  //   setMarketPlace(marketplace);
+  //
+  //   const nft = new ethers.Contract(NFTAddress.address, NFTAbi.abi, newSigner);
+  //   if (!nft) return;
+  //   setNft(nft);
+  // };
 
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

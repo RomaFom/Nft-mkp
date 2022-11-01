@@ -18,18 +18,19 @@ export type MarketplaceItem = {
   name: string;
   description: string;
   image: string;
+};
 
-  // uint itemId;
-  // IERC721 nft;
-  // uint tokenId;
-  // uint price;
-  // address payable seller;
-  // bool isSold;
-
-  // totalPrice,
-  // itemId: item.itemId,
-  // seller: item.seller,
-  // name: metadata.name,
-  // description: metadata.description,
-  // image: metadata.image,
+export type MarketplaceItemDTO = {
+  ItemId: number;
+  Nft: {
+    image: string;
+    name: string;
+    description: string;
+  };
+  TokenId: number;
+  Price: number;
+  ListingPrice: number;
+  Seller: string;
+  IsSold: boolean;
+  TotalPrice: number;
 };

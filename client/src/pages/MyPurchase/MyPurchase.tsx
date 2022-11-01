@@ -7,19 +7,24 @@ import PageWrapper from '@/components/Layout/PageWrapper';
 import { GridLoader } from '@/components/Loaders';
 import NftCard from '@/components/NftCard';
 import { useDapp } from '@/DappContext';
-import { MarketplaceItem } from '@/types';
+import { MarketplaceItem, MarketplaceItemDTO } from '@/types';
 
 import { Transaction } from '../../../utils/api';
-import { checkAddressEquality, fromBigToEth } from '../../../utils/helpers';
+import {
+  bigEther,
+  checkAddressEquality,
+  fromBigToEth,
+  fromWeiToEth,
+} from '../../../utils/helpers';
 const MyPurchase: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [purchased, setPurchased] = useState<MarketplaceItem[]>(
-    [] as MarketplaceItem[],
+  const [purchased, setPurchased] = useState<MarketplaceItemDTO[]>(
+    [] as MarketplaceItemDTO[],
   );
   const navigate = useNavigate();
   const { marketplaceContract, nftContract, wallet } = useDapp();
 
-  const TEMP_ADD_ETH = 10;
+  const LIST_FEE = 1.1;
   const loadPurchasedItems = async (): Promise<void> => {
     try {
       setLoading(true);
@@ -35,7 +40,7 @@ const MyPurchase: React.FC = () => {
       const results =
         (await marketplaceContract?.queryFilter(filter || {})) || [];
 
-      const purchases = [] as MarketplaceItem[];
+      const purchases = [] as MarketplaceItemDTO[];
       await Promise.all(
         results.map(async item => {
           const mkpItem: MarketplaceItem = item?.args as any;
@@ -52,18 +57,21 @@ const MyPurchase: React.FC = () => {
           const totalPrice = await marketplaceContract?.getFinalPrice(
             mkpItem.itemId,
           );
+
           purchases.push({
-            totalPrice,
-            itemId: mkpItem.itemId,
-            seller: mkpItem.seller,
-            name: metadata.name,
-            isSold: mkpItem.isSold,
-            price: mkpItem.price,
-            listingPrice: mkp.listingPrice,
-            nft: mkpItem.nft,
-            tokenId: mkpItem.tokenId,
-            description: metadata.description,
-            image: metadata.image,
+            TotalPrice: +ethers.utils.formatUnits(totalPrice, 'wei'),
+            Price: +ethers.utils.formatUnits(totalPrice, 'wei'),
+            ItemId: mkpItem.itemId.toNumber(),
+            Seller: mkpItem.seller,
+            Nft: {
+              name: metadata.name,
+              description: metadata.description,
+              image: metadata.image,
+            },
+            IsSold: mkpItem.isSold,
+            ListingPrice: +ethers.utils.formatUnits(mkp.listingPrice, 'wei'),
+            // nft: item.nft,
+            TokenId: mkpItem.tokenId.toNumber(),
           });
         }),
       );
@@ -109,6 +117,14 @@ const MyPurchase: React.FC = () => {
     navigate('/nft/' + parsedId);
   };
 
+  const handleListItem = (item: MarketplaceItemDTO): void => {
+    const parsedItemId = ethers.BigNumber.from(item.ItemId);
+    const etherPrice = fromWeiToEth(item.TotalPrice);
+    const priceInBig = bigEther(+etherPrice * LIST_FEE);
+
+    listItem(parsedItemId, priceInBig);
+  };
+
   return loading ? (
     <GridLoader />
   ) : (
@@ -116,7 +132,7 @@ const MyPurchase: React.FC = () => {
       {purchased.map(item => {
         return (
           <NftCard
-            onClick={() => handleClick(item.itemId as unknown as BigNumber)}
+            onClick={() => handleClick(item.ItemId as unknown as BigNumber)}
             item={item}
             footer={
               <>
@@ -126,29 +142,20 @@ const MyPurchase: React.FC = () => {
                 {/*  </p>*/}
                 {/*</div>*/}
                 {/*<br />*/}
-                {item.price < item.listingPrice ? (
+                {item.Price < item.ListingPrice ? (
                   <p>Listed</p>
                 ) : (
                   <div>
                     <p style={{ paddingBottom: '10px' }}>
-                      List for {+fromBigToEth(item.listingPrice) + TEMP_ADD_ETH}{' '}
-                      ETH
+                      List for {+fromWeiToEth(item.TotalPrice) * LIST_FEE} ETH
+                      {/*List for {+fromBigToEth(item.ListingPrice) + TEMP_ADD_ETH}{' '}*/}
                     </p>
                     <Button
                       size="lg"
                       w="100%"
                       colorScheme="teal"
                       variant="outline"
-                      onClick={() =>
-                        listItem(
-                          item.itemId,
-                          ethers.utils.parseEther(
-                            (
-                              +fromBigToEth(item.listingPrice) + TEMP_ADD_ETH
-                            ).toString(),
-                          ),
-                        )
-                      }
+                      onClick={() => handleListItem(item)}
                     >
                       List
                     </Button>
@@ -156,7 +163,7 @@ const MyPurchase: React.FC = () => {
                 )}
               </>
             }
-            key={item.tokenId.toNumber()}
+            key={item.TokenId}
           />
         );
       })}

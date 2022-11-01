@@ -6,6 +6,7 @@ import { ISendTx } from '@/types';
 
 import {
   IItemCountResponse,
+  IItemResponse,
   IUserDataResponse,
   IUserResponse,
   IUserResponseLogin,
@@ -73,4 +74,5 @@ export const User = {
 export const MkpApi = {
   getCount: (): Promise<IItemCountResponse> =>
     requests.get('/marketplace/item-count'),
+  getItems: (): Promise<IItemResponse> => requests.get('/marketplace/get-all'),
 };

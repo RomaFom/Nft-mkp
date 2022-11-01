@@ -21,3 +21,17 @@ export function cropAddress(string?: string, reduceValue = 16): string {
     return string;
   }
 }
+
+export const fromWeiToEth = (value: number): string => {
+  const eth = ethers.utils.formatEther(value.toString());
+  return eth;
+};
+
+export const bigEther = (value: number): ethers.BigNumber => {
+  return ethers.utils.parseUnits(value.toString(), 'ether');
+};
+
+// export const parseWeiToBigEther = (value: number): ethers.BigNumber => {
+//   const eth = fromWeiToEth(value);
+//   return ethers.utils.parseUnits(eth, 'ether');
+// };

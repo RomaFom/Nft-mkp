@@ -1,3 +1,4 @@
+import { MarketplaceItemDTO } from '@/types';
 import { IUser } from '@/UserContext/UserContext';
 
 export interface IResponseError {
@@ -18,6 +19,12 @@ interface IResponse {
 export interface IItemCountResponse extends IResponse {
   data: {
     count: number;
+  };
+}
+
+export interface IItemResponse extends IResponse {
+  data: {
+    items: MarketplaceItemDTO[];
   };
 }
 

@@ -10,11 +10,6 @@ export interface IDappCtx {
   owner: string;
   web3Handler: () => Promise<void>;
   Mkp: Marketplace;
-
-  // setNftContract: (contract: ethers.Contract) => void;
-  // setMarketplaceContract: (contract: ethers.Contract) => void;
-  // setWallet: (address: string) => void;
-  // setOwner: (address: string) => void;
 }
 
 const DappCtxDefaultValues: IDappCtx = {
@@ -24,11 +19,6 @@ const DappCtxDefaultValues: IDappCtx = {
   owner: '',
   web3Handler: () => new Promise(() => null),
   Mkp: new Marketplace({} as ethers.Contract),
-
-  // setNftContract: () => null,
-  // setMarketplaceContract: () => null,
-  // setWallet: () => null,
-  // setOwner: () => null,
 };
 
 export const DappContext = createContext<IDappCtx>(DappCtxDefaultValues);

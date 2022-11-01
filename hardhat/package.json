@@ -13,10 +13,19 @@
   "scripts": {
     "start": "npx hardhat node --network hardhat",
     "test": "npx hardhat test",
-    "compile-abi-colc-mkp": "solc --optimize --base-path '/' --include-path './node_modules' --abi ./contracts/Marketplace.sol -o build",
-    "compile-bin-solc-mkp": "solc --optimize --base-path '/' --include-path './node_modules' --bin ./contracts/Marketplace.sol -o build",
-    "compile-go-file-mkp": "abigen --abi=./contracts/build/Marketplace.abi --bin=./contracts/build/Marketplace.bin --pkg=sc_api --out=../../GoMkp/pkg/smart-contracts/MarketplaceSC.go",
-    "compile-all-mkp": "npm run compile-abi-colc-mkp && npm run compile-bin-solc-mkp && npm run compile-go-file-mkp",
+    "compile-abi-solc-mkp": "solc --overwrite --optimize --base-path '/' --include-path './node_modules' --abi ./contracts/Marketplace.sol -o build",
+    "compile-abi-solc-nft": "solc --overwrite --optimize --base-path '/' --include-path './node_modules' --abi ./contracts/NFT.sol -o build",
+
+    "compile-bin-solc-mkp": "solc --overwrite --optimize --base-path '/' --include-path './node_modules' --bin ./contracts/Marketplace.sol -o build",
+    "compile-bin-solc-nft": "solc --overwrite --optimize --base-path '/' --include-path './node_modules' --bin ./contracts/NFT.sol -o build",
+
+    "compile-go-file-mkp": "abigen --abi=./build/Marketplace.abi --bin=./build/Marketplace.bin --pkg=mkp_api --out=../../GoMkp/pkg/MkpSc/MarketplaceSC.go",
+    "compile-go-file-nft": "abigen --abi=./build/NFT.abi --bin=./build/NFT.bin --pkg=nft_api --out=../../GoMkp/pkg/NftSc/NftSC.go",
+
+    "compile-all-mkp": "npm run compile-abi-solc-mkp && npm run compile-bin-solc-mkp && npm run compile-go-file-mkp",
+    "compile-all-nft": "npm run compile-abi-solc-nft && npm run compile-bin-solc-nft && npm run compile-go-file-nft",
+
+    "compile-all": "npm run compile-all-nft && npm run compile-all-mkp",
     "deploy-no-compile": "npx hardhat run scripts/deploy.ts --network localhost",
     "deploy": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network localhost",
     "deploy-rinkeby": "npx hardhat clean && npx hardhat compile && npx hardhat run scripts/deploy.ts --network rinkeby",

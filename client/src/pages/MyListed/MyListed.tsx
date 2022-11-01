@@ -4,13 +4,13 @@ import PageWrapper from '@/components/Layout/PageWrapper';
 import { GridLoader } from '@/components/Loaders';
 import NftCard from '@/components/NftCard';
 import { useDapp } from '@/DappContext';
-import { MarketplaceItem } from '@/types';
+import { MarketplaceItem, MarketplaceItemDTO } from '@/types';
 
 import { checkAddressEquality, fromBigToEth } from '../../../utils/helpers';
 
 const MyListed: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [listed, setListed] = useState<Array<MarketplaceItem>>([]);
+  const [listed, setListed] = useState<Array<MarketplaceItemDTO>>([]);
   // const [sold, setSold] = useState<Array<MarketplaceItem>>([]);
   const { marketplaceContract, nftContract, wallet } = useDapp();
 
@@ -18,7 +18,7 @@ const MyListed: React.FC = () => {
     try {
       setLoading(true);
       const itemsCount = await marketplaceContract?.itemCount();
-      const listed: MarketplaceItem[] = [];
+      const listed: MarketplaceItemDTO[] = [];
       // const sold: MarketplaceItem[] = [];
 
       for (let i = 1; i <= itemsCount; i++) {
@@ -35,18 +35,22 @@ const MyListed: React.FC = () => {
             item.itemId,
           );
 
-          const itemData: MarketplaceItem = {
-            totalPrice,
-            itemId: item.itemId,
-            seller: item.seller,
-            name: metadata.name,
-            isSold: item.isSold,
-            price: item.price,
-            listingPrice: item.listingPrice,
-            nft: item.nft,
-            tokenId: item.tokenId,
-            description: metadata.description,
-            image: metadata.image,
+          const itemData: MarketplaceItemDTO = {
+            TotalPrice: totalPrice.toString(),
+            Price: totalPrice.toString(),
+            ItemId: item.itemId.toNumber(),
+            Seller: item.seller,
+            Nft: {
+              name: metadata.name,
+              description: metadata.description,
+              image: metadata.image,
+            },
+            IsSold: item.isSold,
+            ListingPrice: item.listingPrice.toNumber(),
+            // nft: item.nft,
+            TokenId: item.tokenId.toNumber(),
+            // description: metadata.description,
+            // image: metadata.image,
           };
           listed.push(itemData);
           // if (item.isSold) {
@@ -76,10 +80,10 @@ const MyListed: React.FC = () => {
             key={index}
             item={item}
             footer={
-              item.isSold ? (
+              item.IsSold ? (
                 <>
                   <p className="footer-price">
-                    Sold for {fromBigToEth(item.price)} ETH
+                    Sold for {fromBigToEth(item.Price)} ETH
                   </p>
                 </>
               ) : (
