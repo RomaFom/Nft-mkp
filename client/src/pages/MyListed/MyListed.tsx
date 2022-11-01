@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
 import PageWrapper from '@/components/Layout/PageWrapper';
@@ -18,11 +19,14 @@ const MyListed: React.FC = () => {
     try {
       setLoading(true);
       const itemsCount = await marketplaceContract?.itemCount();
+
       const listed: MarketplaceItemDTO[] = [];
       // const sold: MarketplaceItem[] = [];
 
       for (let i = 1; i <= itemsCount; i++) {
+        console.log('i', i);
         const item: MarketplaceItem = await marketplaceContract?.items(i);
+        console.log(item);
 
         if (checkAddressEquality(wallet, item.seller) && !item.isSold) {
           //  get nft url
@@ -36,8 +40,8 @@ const MyListed: React.FC = () => {
           );
 
           const itemData: MarketplaceItemDTO = {
-            TotalPrice: totalPrice.toString(),
-            Price: totalPrice.toString(),
+            TotalPrice: Number(ethers.utils.formatUnits(totalPrice, 'wei')),
+            Price: Number(ethers.utils.formatUnits(totalPrice, 'wei')),
             ItemId: item.itemId.toNumber(),
             Seller: item.seller,
             Nft: {
@@ -46,7 +50,9 @@ const MyListed: React.FC = () => {
               image: metadata.image,
             },
             IsSold: item.isSold,
-            ListingPrice: item.listingPrice.toNumber(),
+            ListingPrice: Number(
+              ethers.utils.formatUnits(item.listingPrice, 'wei'),
+            ),
             // nft: item.nft,
             TokenId: item.tokenId.toNumber(),
             // description: metadata.description,
@@ -60,7 +66,7 @@ const MyListed: React.FC = () => {
       }
       setListed(listed);
     } catch (e) {
-      // console.log(e);
+      console.log(e);
     } finally {
       setLoading(false);
     }
