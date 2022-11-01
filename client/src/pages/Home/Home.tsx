@@ -11,11 +11,7 @@ import { MarketplaceItemDTO } from '@/types';
 import { useUser } from '@/UserContext/UserContext';
 
 import { MkpApi, Transaction } from '../../../utils/api';
-import {
-  bigEther,
-  checkAddressEquality,
-  fromWeiToEth,
-} from '../../../utils/helpers';
+import { bigEther, checkAddressEquality } from '../../../utils/helpers';
 
 const Home: React.FC = () => {
   const [items, setItems] = React.useState<Array<MarketplaceItemDTO>>([]);
@@ -29,7 +25,6 @@ const Home: React.FC = () => {
       setLoading(true);
 
       const { data } = await MkpApi.getItems();
-      console.log(data.items);
       setItems(data.items);
     } catch (e) {
       // console.log(e);
@@ -38,23 +33,21 @@ const Home: React.FC = () => {
     }
   };
 
-  const buyItem = useCallback(
-    async (item: MarketplaceItemDTO) => {
-      const priceInEth = fromWeiToEth(item.TotalPrice);
+  const buyItem = async (item: MarketplaceItemDTO): Promise<void> => {
+    try {
+      const parsedItemId = ethers.BigNumber.from(item.ItemId.toString());
+      const parsedPrice = bigEther(+item.TotalPrice);
 
-      const priceInBig = bigEther(+priceInEth);
-
-      const parsedItemId = ethers.BigNumber.from(item.ItemId);
-
-      const res = await Mkp.buyItem(parsedItemId, priceInBig);
+      const res = await Mkp.buyItem(parsedItemId, parsedPrice);
       await Transaction.addNew({
         wallet: wallet,
         tx_hash: res.transactionHash,
       });
       await loadMarketPlaceItems();
-    },
-    [Mkp, nftContract, wallet],
-  );
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   useEffect(() => {
     loadMarketPlaceItems();

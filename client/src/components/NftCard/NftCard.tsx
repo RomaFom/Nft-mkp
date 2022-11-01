@@ -24,8 +24,6 @@ type Props = {
 };
 
 const NftCard: React.FC<Props> = ({ item, footer, onClick }) => {
-  const priceInEther = fromWeiToEth(item.TotalPrice);
-
   return (
     <>
       <div className="card">
@@ -44,7 +42,7 @@ const NftCard: React.FC<Props> = ({ item, footer, onClick }) => {
           <div className="wrapper">
             <div className="card__price">
               <img alt={'nftImg'} src={nftImg} className="card__icon" />
-              <span>{priceInEther} ETH</span>
+              <span>{item.TotalPrice} ETH</span>
             </div>
             <div className="card__countdown">
               {/*<img src="#" className="card__icon" />*/}

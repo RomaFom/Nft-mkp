@@ -28,9 +28,9 @@ export type MarketplaceItemDTO = {
     description: string;
   };
   TokenId: number;
-  Price: number;
-  ListingPrice: number;
+  Price: string;
+  ListingPrice: string;
   Seller: string;
   IsSold: boolean;
-  TotalPrice: number;
+  TotalPrice: string;
 };
