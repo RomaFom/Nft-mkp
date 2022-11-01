@@ -54,7 +54,7 @@ const Navbar: React.FC = () => {
                   <Link to={RoutePaths.MY_LISTINGS}>My Listings</Link>
                 </Button>
                 <Button key={'Purchase'}>
-                  <Link to={RoutePaths.MY_PURCHASES}>My NFT's</Link>
+                  <Link to={RoutePaths.MY_PURCHASES}>My NFT&apos;s</Link>
                 </Button>
               </>
             )}
