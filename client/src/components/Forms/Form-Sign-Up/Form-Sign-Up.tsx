@@ -48,8 +48,6 @@ const FormSignUp: React.FC = () => {
         // setTimeout(() => {
         //   navigate('/login');
         // }, 3000);
-
-        console.log(data);
       }
     } catch (err: any) {
       toast({

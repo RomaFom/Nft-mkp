@@ -44,7 +44,6 @@ function App(): React.ReactElement {
           console.log(err);
         });
     }
-    console.log(token);
   }, []);
 
   const renderRoutes = useRoutes(routes);

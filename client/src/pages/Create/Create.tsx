@@ -39,7 +39,7 @@ const Create: React.FC = () => {
     try {
       setImgUploading(true);
       const result = await client.add(file);
-      console.log(result);
+
       setImage('https://roma-mkp.infura-ipfs.io/ipfs/' + result.path);
     } catch (e) {
       console.log(e);

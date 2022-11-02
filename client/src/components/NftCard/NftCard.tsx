@@ -1,22 +1,10 @@
 import './NftCard.scss';
 
-import { Button } from '@chakra-ui/react';
-import { jsx } from '@emotion/react';
-import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 import nftImg from '@/assets/icon-ethereum.svg';
-import { useDapp } from '@/DappContext';
-import { MarketplaceItem, MarketplaceItemDTO } from '@/types';
-import { useUser } from '@/UserContext/UserContext';
+import { MarketplaceItemDTO } from '@/types';
 
-import { Transaction } from '../../../utils/api';
-import {
-  checkAddressEquality,
-  fromBigToEth,
-  fromWeiToEth,
-} from '../../../utils/helpers';
-import JSX = jsx.JSX;
 type Props = {
   item: MarketplaceItemDTO;
   footer: React.ReactNode;
