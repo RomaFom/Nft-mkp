@@ -49,15 +49,12 @@ const MyPurchase: React.FC = () => {
   };
 
   const handleClick = (id: number): void => {
-    // const parsedId = parseInt(id._hex);
     navigate('/nft/' + id);
   };
 
   const handleListItem = (item: MarketplaceItemDTO): void => {
     const parsedItemId = ethers.BigNumber.from(item.ItemId.toString());
     const parsedListingPrice = bigEther(+item.TotalPrice + LIST_FEE);
-
-    console.log('parsedListingPrice', parsedListingPrice);
     listItem(parsedItemId, parsedListingPrice);
   };
 
@@ -73,19 +70,12 @@ const MyPurchase: React.FC = () => {
               item={item}
               footer={
                 <>
-                  {/*<div>*/}
-                  {/*  <p className="footer-price">*/}
-                  {/*    Bought for {fromBigToEth(item.price)} ETH*/}
-                  {/*  </p>*/}
-                  {/*</div>*/}
-                  {/*<br />*/}
                   {+item.Price < +item.ListingPrice ? (
                     <p>Listed</p>
                   ) : (
                     <div>
                       <p style={{ paddingBottom: '10px' }}>
                         List for {+item.TotalPrice + LIST_FEE} ETH
-                        {/*List for {+fromBigToEth(item.ListingPrice) + TEMP_ADD_ETH}{' '}*/}
                       </p>
                       <Button
                         size="lg"

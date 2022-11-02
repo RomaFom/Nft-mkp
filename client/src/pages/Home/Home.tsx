@@ -26,7 +26,6 @@ const Home: React.FC = () => {
   }, []);
 
   const buyItem = async (item: MarketplaceItemDTO): Promise<void> => {
-    console.log('item', parseFloat(item.TotalPrice).toFixed(5));
     try {
       const parsedItemId = ethers.BigNumber.from(item.ItemId.toString());
       const parsedPrice = bigEther(+item.TotalPrice);

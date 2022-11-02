@@ -68,25 +68,32 @@ const Create: React.FC = () => {
 
   const mintThenList = async (result: any): Promise<void> => {
     const uri = 'https://roma-mkp.infura-ipfs.io/ipfs/' + result.path;
-    if (nftContract && marketplaceContract) {
-      await (await nftContract.mint(uri)).wait();
-      const id = await nftContract?.tokenCount();
-      await (
-        await nftContract.setApprovalForAll(marketplaceContract?.address, true)
-      ).wait();
-      const listingPrice = ethers.utils.parseEther(price.toString());
-      const res = await (
-        await marketplaceContract.makeItem(
-          nftContract?.address,
-          id,
-          listingPrice,
-        )
-      ).wait();
+    try {
+      if (nftContract && marketplaceContract) {
+        await (await nftContract.mint(wallet, uri)).wait();
+        const id = await nftContract?.tokenCount();
+        await (
+          await nftContract.setApprovalForAll(
+            marketplaceContract?.address,
+            true,
+          )
+        ).wait();
+        const listingPrice = ethers.utils.parseEther(price.toString());
+        const res = await (
+          await marketplaceContract.makeItem(
+            nftContract?.address,
+            id,
+            listingPrice,
+          )
+        ).wait();
 
-      await Transaction.addNew({
-        wallet: wallet,
-        tx_hash: res.transactionHash,
-      });
+        await Transaction.addNew({
+          wallet: wallet,
+          tx_hash: res.transactionHash,
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 

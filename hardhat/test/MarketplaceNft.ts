@@ -48,6 +48,33 @@ describe("NFTMarketplace", async () => {
       await nft.connect(user1).mint(URI);
       await nft.connect(user1).setApprovalForAll(marketplace.address, true);
     });
+    // it("Should create 1000 items", async () => {
+    //   const images = [
+    //     "https://roma-mkp.infura-ipfs.io/ipfs/QmUAFHynVGb3WBPsJWFC9U17GHvGhJkb8zLVPUTHN332DN",
+    //     "https://roma-mkp.infura-ipfs.io/ipfs/QmbiTN8TMSdCHF6vPJCs6F7Trecc1hKu4z6Egiogre9zcf",
+    //     "https://roma-mkp.infura-ipfs.io/ipfs/QmcAVAj7mopRwADotdUrAhRupSiiX249ekPvJH4TWzQAHD",
+    //     "https://roma-mkp.infura-ipfs.io/ipfs/QmSD51Ak29JYNb2FziEvD2VXRsW7dChU61F3Zbf7rnWoed",
+    //     "https://roma-mkp.infura-ipfs.io/ipfs/QmTuoGDGtksKfGrjzUqaU1PwsEUE7qP2buGG5ixhCvKx6E",
+    //   ];
+    //   const img = images[Math.floor(Math.random() * images.length)];
+    //   const price = Math.floor(Math.random() * 100) + 1;
+    //
+    //   console.log("MKP", marketplace.address);
+    //   console.log("NFT", nft.address);
+    //   for (let i = 0; i < 1000; i++) {
+    //     await nft.connect(user1).mint(img);
+    //
+    //     await expect(
+    //       marketplace
+    //         .connect(user1)
+    //         .makeItem(
+    //           nft.address,
+    //           i + 1,
+    //           web3.utils.toWei(price.toString(), "ether")
+    //         )
+    //     ).to.emit(marketplace, "Offered");
+    //   }
+    // });
     it("Should track new created item, transfer nft from seller to marketplace and emit Offered", async () => {
       await expect(
         marketplace

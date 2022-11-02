@@ -13,9 +13,11 @@ const config: HardhatUserConfig = {
     //   accounts: ["0xc4b91b70e58626e9200fb1bca16bd0560a1ca658f537f58f95bdaf63050c0c49"],
     // },
     goerli: {
-      url: `https://eth-goerli.g.alchemy.com/v2/waJET_mizSl_H-9DCccyN5xyxYOx2Wm7`,
-      accounts: ["f701252987e09d043924f1b292f43bec679f6bdb6426fd08d742284adf56d928"]
-    }
+      url: "https://eth-goerli.g.alchemy.com/v2/5IkC6PlLS3JDeD2Q7sst_-JyBDPm7Wve",
+      accounts: [
+        "c4b91b70e58626e9200fb1bca16bd0560a1ca658f537f58f95bdaf63050c0c49",
+      ],
+    },
   },
   // paths: {
   //   artifacts: "./artifacts",
