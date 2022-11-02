@@ -28,6 +28,7 @@ export class Marketplace {
     return await (
       await this.contract.buyItem(itemId, {
         value: price,
+        gasLimit: 1000000,
       })
     ).wait();
   }

@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import { ethers } from 'ethers';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import PageWrapper from '@/components/Layout/PageWrapper';
@@ -23,6 +23,10 @@ const MyPurchase: React.FC = () => {
     token: user?.token,
   });
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   const LIST_FEE = 1;
 
   const listItem = async (itemId: any, listingPrice: any): Promise<void> => {
@@ -33,6 +37,8 @@ const MyPurchase: React.FC = () => {
       const res = await (
         await marketplaceContract.listItem(itemId, listingPrice)
       ).wait();
+
+      console.log('res', res);
 
       await Transaction.addNew({
         wallet: wallet,
@@ -50,6 +56,8 @@ const MyPurchase: React.FC = () => {
   const handleListItem = (item: MarketplaceItemDTO): void => {
     const parsedItemId = ethers.BigNumber.from(item.ItemId.toString());
     const parsedListingPrice = bigEther(+item.TotalPrice + LIST_FEE);
+
+    console.log('parsedListingPrice', parsedListingPrice);
     listItem(parsedItemId, parsedListingPrice);
   };
 

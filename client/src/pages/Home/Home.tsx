@@ -29,7 +29,7 @@ const Home: React.FC = () => {
     console.log('item', parseFloat(item.TotalPrice).toFixed(5));
     try {
       const parsedItemId = ethers.BigNumber.from(item.ItemId.toString());
-      const parsedPrice = bigEther(+parseFloat(item.TotalPrice).toFixed(2));
+      const parsedPrice = bigEther(+item.TotalPrice);
 
       const res = await Mkp.buyItem(parsedItemId, parsedPrice);
       await Transaction.addNew({
