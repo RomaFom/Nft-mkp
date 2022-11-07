@@ -1,8 +1,9 @@
 import { ethers } from 'ethers';
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { useNavigate, useRoutes } from 'react-router-dom';
 
-import Navbar from '@/components/Navbar';
+import FloatingButton from '@/components/FloatingButton';
+import SideBar from '@/components/SideBar';
 import { Marketplace } from '@/contract-integration/marketplace';
 import { DappContext, IDappCtx } from '@/DappContext';
 import useWeb3 from '@/hooks/useWeb3';
@@ -35,10 +36,13 @@ function App(): React.ReactElement {
       User.getUserData(token)
         .then(res => {
           const { id, name, username, wallet } = res.data.user;
-          if (id) {
-            setUser({ id, name, username, wallet, token });
-            navigate('/');
+          if (!id) {
+            localStorage.removeItem('auth_mkp');
+            return;
           }
+
+          setUser({ id, name, username, wallet, token });
+          navigate('/');
         })
         .catch(err => {
           console.log(err);
@@ -47,13 +51,24 @@ function App(): React.ReactElement {
   }, []);
 
   const renderRoutes = useRoutes(routes);
+  const [isSideBarOpen, setSideBarOpen] = React.useState(false);
 
   return (
     <div className="App">
       <DappContext.Provider value={dappCtxValues}>
         <UserContext.Provider value={userCtx}>
-          <Navbar />
-          <main>
+          {/*<FloatingButton />*/}
+          <SideBar
+            isSideBarOpen={isSideBarOpen}
+            setSideBarOpen={setSideBarOpen}
+          />
+          <main
+            style={{
+              marginLeft: isSideBarOpen ? '260px' : '72px',
+              transition: '0.4s',
+            }}
+          >
+            <FloatingButton />
             <Suspense
               fallback={<div className="centered-loader">Loading...</div>}
             >

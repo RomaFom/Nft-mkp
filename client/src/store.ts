@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import feed from '@/features/feed/feedSlice';
+import modal from '@/features/modal/modalSlice';
 import { feedApi } from '@/services/feed/feed';
 export const store = configureStore({
   reducer: {
     feed: feed,
+    modal: modal,
     feedApi: feedApi.reducer,
   },
   middleware: getDefaultMiddleware =>

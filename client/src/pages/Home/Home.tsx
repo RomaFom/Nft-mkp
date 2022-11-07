@@ -103,14 +103,16 @@ const Home: React.FC = () => {
         <GridLoader />
       ) : (
         <PageWrapper>
-          {data &&
-            data.map((item, index) => (
-              <NftCard
-                key={index}
-                item={item}
-                footer={<RenderFooter item={item} />}
-              />
-            ))}
+          <div className="grid nft-grid">
+            {data &&
+              data.map((item, index) => (
+                <NftCard
+                  key={index}
+                  item={item}
+                  footer={<RenderFooter item={item} />}
+                />
+              ))}
+          </div>
         </PageWrapper>
       )}
     </>

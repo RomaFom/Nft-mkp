@@ -1,11 +1,17 @@
 import React from 'react';
 
 import FormLogin from '@/components/Forms/Form-Login';
+import PageWrapper from '@/components/Layout';
 
 const Login: React.FC = () => {
   return (
     <>
-      <FormLogin />
+      <PageWrapper>
+        <FormLogin />
+        {/*<Modal show={show} setShow={setShow} title={'Title'}>*/}
+        {/*  <div>asdasdasd</div>*/}
+        {/*</Modal>*/}
+      </PageWrapper>
     </>
   );
 };

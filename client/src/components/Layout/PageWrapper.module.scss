@@ -1,6 +1,4 @@
-.pageGrid{
-  display: grid;
-  padding: 0 to-rem(30);
-  grid-template-columns: 1fr repeat(12, minmax(auto, 60px)) 1fr;
-  grid-gap: 20px;
+.pageWrapper{
+  padding: to-rem(20);
+  z-index: 1;
 }

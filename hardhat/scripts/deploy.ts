@@ -36,7 +36,7 @@ async function init(nft: any, marketplace: any, deployer: any) {
 
   await nft.connect(deployer).setApprovalForAll(marketplace.address, true);
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 10; i++) {
     const img = images[Math.floor(Math.random() * images.length)];
     const price = Math.floor(Math.random() * 100) + 1;
     await nft.connect(deployer).mint(deployer.address, img);

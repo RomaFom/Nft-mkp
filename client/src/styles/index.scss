@@ -1,8 +1,11 @@
+@import "mixins";
 @import 'variables';
 @import 'media';
 @import 'placeholders';
 @import 'animations';
 @import "app";
+@import "gird";
+
 
 * {
     box-sizing: border-box;

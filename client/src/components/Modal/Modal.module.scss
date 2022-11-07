@@ -1,0 +1,134 @@
+//.modal {
+//  position: fixed;
+//  left: 50%;
+//  top: 50%;
+//  transform: translate(-50%, -50%);
+//  background: #ff4c29;
+//  color: #4ecca3;
+//  padding: to-rem(48) to-rem(40);
+//  width: to-rem(300);
+//  height: to-rem(300);
+//  border-radius: to-rem(16);
+//
+//}
+
+//.modal-enter-done {
+//  opacity: 1;
+//  pointer-events: auto;
+//  transform: scale(1);
+//}
+//.modal-exit {
+//  opacity: 0;
+//  transform: scale(0.4);
+//}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+.modal-body.open .background {
+  visibility: visible;
+  opacity: 1;
+}
+
+@keyframes modal-in {
+  0%,
+  50% {
+    width: 100px;
+    height: 100px;
+    //border-radius: 50%;
+  }
+  55%,
+  100% {
+    right: 50%;
+  }
+  60% {
+    width: 300px;
+    border-radius: 12px;
+  }
+  75% {
+    translate: 50% -50%;
+  }
+}
+
+.page-content,
+.modal,
+.background {
+  transition: 0.5s;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  right: -300px;
+  translate: 50% -50%;
+  background: #1d2025;
+  color: #f9f9f9;
+  padding: to-rem(20) to-rem(20);
+  width: to-rem(300);
+  height: to-rem(300);
+  border-radius: 12px;
+  border: var(--main-green) to-rem(3) solid;
+}
+
+.title {
+  text-align: center;
+  font-size: to-rem(24);
+  font-weight: 700;
+}
+
+.closeBtn {
+  display: flex;
+  justify-content: flex-end;
+
+  & > .closeIcon {
+    color: var(--light-grey);
+    width: to-rem(40);
+    height: to-rem(40);
+    cursor: pointer;
+  }
+}
+
+@keyframes modal-content-in {
+  0%,
+  75% {
+    opacity: 0;
+  }
+  85%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.modal-body.open .modal-content {
+  animation: modal-content-in 1s both;
+}
+
+.modal-body.open > .page-content {
+  scale: 0.75;
+}
+
+.modal-body.open .modal {
+  animation: modal-in 1s both;
+}
+
+h2 {
+  margin: 0 0 8px;
+  font-weight: 400;
+  font-size: 21px;
+}
+
+p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.5);
+}

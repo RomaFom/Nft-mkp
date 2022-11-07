@@ -22,24 +22,26 @@ const MyListed: React.FC = () => {
     <GridLoader />
   ) : (
     <PageWrapper>
-      {data &&
-        data.map((item, index) => (
-          <NftCard
-            key={index}
-            item={item}
-            footer={
-              item.IsSold ? (
-                <>
-                  <p className="footer-price">
-                    Sold for {fromBigToEth(item.Price)} ETH
-                  </p>
-                </>
-              ) : (
-                <>Listed</>
-              )
-            }
-          />
-        ))}
+      <div className="grid nft-grid">
+        {data &&
+          data.map((item, index) => (
+            <NftCard
+              key={index}
+              item={item}
+              footer={
+                item.IsSold ? (
+                  <>
+                    <p className="footer-price">
+                      Sold for {fromBigToEth(item.Price)} ETH
+                    </p>
+                  </>
+                ) : (
+                  <>Listed</>
+                )
+              }
+            />
+          ))}
+      </div>
     </PageWrapper>
   );
 };

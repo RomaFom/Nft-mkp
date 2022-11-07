@@ -30,7 +30,7 @@ const NftCard: React.FC<Props> = ({ item, footer, onClick }) => {
           <div className="wrapper">
             <div className="card__price">
               <img alt={'nftImg'} src={nftImg} className="card__icon" />
-              <span>{item.TotalPrice} ETH</span>
+              <span>{item.Price} ETH</span>
             </div>
             <div className="card__countdown">
               {/*<img src="#" className="card__icon" />*/}
