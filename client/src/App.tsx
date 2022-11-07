@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import React, { Suspense, useEffect, useRef, useState } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useNavigate, useRoutes } from 'react-router-dom';
 
 import FloatingButton from '@/components/FloatingButton';
@@ -45,7 +45,7 @@ function App(): React.ReactElement {
           navigate('/');
         })
         .catch(err => {
-          console.log(err);
+          localStorage.removeItem('auth_mkp');
         });
     }
   }, []);

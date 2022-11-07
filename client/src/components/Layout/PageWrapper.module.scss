@@ -1,4 +1,3 @@
 .pageWrapper{
-  padding: to-rem(20);
-  z-index: 1;
+  @apply p-5;
 }
